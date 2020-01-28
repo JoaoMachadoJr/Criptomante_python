@@ -1,0 +1,3 @@
+criptomante_crawler/lib*
+*_pycache_*
+criptomante/repository/__pycache__/*
