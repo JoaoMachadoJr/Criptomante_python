@@ -1,23 +1,24 @@
 if __name__ == "__main__":
     from dotenv import load_dotenv
     from pathlib import Path
-    env_path = Path('C:\\@work\\joao\\criptomante\\.env')
+    env_path = Path('C:\\@work\\pessoal\\Criptomante_python\\.env')
     load_dotenv(dotenv_path=env_path)
 
     import sys
-    sys.path.append('C:\\@work\\joao\\criptomante')
+    sys.path.append('C:\\@work\\pessoal\\Criptomante_python')
 
 
 from abc import ABC, abstractmethod
 from criptomante.util.log import Log
 from criptomante_crawler.browser.browser import Browser
-from criptomante_crawler.threads.thread_postagens import GerenciadorThreadPostagens, ThreadPostagens
+from criptomante_crawler.threads.thread_postagens import ThreadPostagens
 from criptomante.repository.postagensRepository import PostagensRepository
 from criptomante.model.postagem import Postagem
 from typing import List
 from criptomante.model.mensagem import Mensagem
 import time
 from criptomante_crawler.threads.gerenciador_threads import GerenciadorThreads
+from time import sleep
 
 class AbstractCrawler(ABC):
     def __init__(self, url:str = None):
@@ -30,17 +31,19 @@ class AbstractCrawler(ABC):
 
         if iniciar_leitor_postagens:
             GerenciadorThreads.iniciar_gerenciamento(ThreadPostagens, True, quantidade_limite=25, fabricar=True, timeout=120)
-        
-        import time
-
+                
         while (self.url!=None):
-            Log.info("Lendo url: "+self.url)
-            postagens = self.processar_menu(self.url)
-            for postagem in postagens:
-                postagem.website = self.website
-                repositorio.inserePostagem(postagem)
-            self.url = self.obtemProximaPagina(self.html)
-        GerenciadorThreadPostagens.esperando_novos=False
+            try:                
+                postagens = self.processar_menu(self.url)
+                for postagem in postagens:
+                    postagem.website = self.website
+                repositorio.inserePostagens(postagens)
+                proxima = self.obtemProximaPagina(self.html)
+                if proxima!=None:
+                    self.url=proxima
+            except Exception as e:
+                print(str(e))
+            
         if iniciar_leitor_postagens:
             GerenciadorThreads.finalizar_gerenciamento(ThreadPostagens, continuar_esperando_novas_threads=True)
 
@@ -64,7 +67,6 @@ class AbstractCrawler(ABC):
     def obtemPostagens(self, html:str) ->List[Postagem]:
         #TODO
         return list()
-
 
     @abstractmethod
     def obtemProximaPagina(self, html:str) ->str:

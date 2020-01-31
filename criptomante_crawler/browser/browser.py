@@ -5,7 +5,7 @@ import requests
 import gc
 import wget
 from random import randrange
-
+import download
 
 class Browser:
 

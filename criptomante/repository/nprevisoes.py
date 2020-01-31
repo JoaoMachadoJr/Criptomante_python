@@ -35,14 +35,7 @@ class NPrevisoesRepository(AbstractRepository):
 		
 
 
-		def resultadoAnaliseTextual(self):									
-			sql=  "select fn_analise_textual(false) as resultado;"
-			result = self.fetchOne(sql,dict())
-			
-			if result!=None:
-				return result["resultado"]
-			else:
-				return 0
+		
 		
 		
 		def datas(self, lista):

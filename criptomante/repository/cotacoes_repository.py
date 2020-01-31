@@ -65,3 +65,11 @@ class CotacoesRepository(AbstractRepository):
             params.append(param)
         self.executeMany(sql, params)
         
+    def listarCotacoesComoMapaDeDatas(self):
+        cotacoes = self.listarCotacoes()
+        return {c.data: c for c in cotacoes}
+    
+    def data_ultima_cotacao(self):
+        sql = "select max(data) as data from cotacoes"
+        return self.fetchOne(sql, dict())["data"]
+    

@@ -9,6 +9,7 @@ from criptomante.model.mensagem import Mensagem
 import time
 import praw
 from psaw import PushshiftAPI
+from criptomante.util.log import Log
 
 class CrawlerReddit(AbstractCrawler):
     def obtemPostagens(self, html:str)->List[Postagem]:
@@ -84,7 +85,9 @@ class CrawlerReddit(AbstractCrawler):
             ultima_postagem = postagens[len(postagens)-1]
             datahora_utc = time.mktime(ultima_postagem.data.timetuple())
             subforum = StringUtil.str_between(self.url, "subreddit=","&")
-            return "https://api.pushshift.io/reddit/search/submission/?subreddit=" +subforum+ "&sort_type=created_utc&sort=asc&after="+str(int(datahora_utc))
+            saida = "https://api.pushshift.io/reddit/search/submission/?subreddit=" +subforum+ "&sort_type=created_utc&sort=asc&after="+str(int(datahora_utc))
+            print("URL: {}   A partir de: {}".format(saida, ultima_postagem.data.strftime("%d/%m/%Y %H:%M:%S")))
+            return saida
 
 if __name__ == "__main__":
     from criptomante_crawler.browser.browser import Browser

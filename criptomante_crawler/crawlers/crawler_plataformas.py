@@ -1,3 +1,12 @@
+if __name__ == "__main__":
+    from dotenv import load_dotenv
+    from pathlib import Path
+    env_path = Path('C:\\@work\\pessoal\\Criptomante_python\\.env')
+    load_dotenv(dotenv_path=env_path)
+
+    import sys
+    sys.path.append('C:\\@work\\pessoal\\Criptomante_python')
+
 from criptomante.repository.cotacoes_repository import CotacoesRepository
 from datetime import timedelta, datetime
 from threading import Thread
@@ -22,9 +31,11 @@ class CrawlerPlataformas:
 
         #Download do arquivo CSV
         #Browser.download(URL_API,CAMINHO_ARQUIVO_COMPACTADO)
+        #print("Iniciando descompactacao de arquivo")
         #self.descompactar_arquivo(CAMINHO_ARQUIVO_COMPACTADO, CAMINHO_ARQUIVO)
 
         #Ler arquivo CSV
+        print("Iniciando contagem de linhas")
         cotacoes = set()
         linhas = self.contar_linhas(CAMINHO_ARQUIVO)
         print("Arquivo de {} linhas".format(linhas))

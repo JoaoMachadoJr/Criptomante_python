@@ -1,3 +1,12 @@
+if __name__ == "__main__":
+    from dotenv import load_dotenv
+    from pathlib import Path
+    env_path = Path('C:\\@work\\pessoal\\Criptomante_python\\.env')
+    load_dotenv(dotenv_path=env_path)
+
+    import sys
+    sys.path.append('C:\\@work\\pessoal\\Criptomante_python')
+    
 from criptomante.repository.cotacoes_repository import CotacoesRepository
 from typing import List, Dict
 from criptomante.model.cotacao import Cotacao

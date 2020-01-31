@@ -7,20 +7,23 @@ class AbstractRepository:
 
 
     def begin(self):
-        transaction.set_autocommit(False,)
+        transaction.set_autocommit(False)        
 
     def commit(self):
         transaction.commit()
         transaction.set_autocommit(True)
+        connection.close()
 
     def rollback(self):
         transaction.rollback()
         transaction.set_autocommit(True)
 
-    def execute(self, sql: str, params: dict):
+    def execute(self, sql: str, params: dict = dict()):
         with connection.cursor() as cursor:
             self.execute_retornando_cursor(sql, params, cursor)
-        connection.close()
+        if transaction.get_autocommit():
+            connection.close()
+
         
         
     def executeMany(self, sql, params:list):
@@ -31,16 +34,20 @@ class AbstractRepository:
         with connection.cursor() as cursor:
             cursor.executemany(sql2,params2)
 
-    def fetchAll(self, sql: str, params: dict) -> List[dict]:
+    def fetchAll(self, sql: str, params: dict = dict()) -> List[dict]:
         with connection.cursor() as cursor:
             self.execute_retornando_cursor(sql, params, cursor)
             retorno = CursorUtil().fetchall(cursor)
+        if transaction.get_autocommit():
+            connection.close()
         return retorno
 
-    def fetchOne(self, sql: str, params: dict) -> List[dict]:
+    def fetchOne(self, sql: str, params: dict = dict()) -> List[dict]:
         with connection.cursor() as cursor:
             self.execute_retornando_cursor(sql, params, cursor)
             retorno = CursorUtil().fetchone(cursor)
+        if transaction.get_autocommit():
+            connection.close()
         return retorno
 
     def execute_retornando_cursor(self, sql: str, params: dict, cursor):
