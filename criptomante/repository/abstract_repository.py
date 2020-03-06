@@ -23,6 +23,9 @@ class AbstractRepository:
             self.execute_retornando_cursor(sql, params, cursor)
         if transaction.get_autocommit():
             connection.close()
+    
+    def conexao(self):
+        return transaction.get_connection()
 
         
         

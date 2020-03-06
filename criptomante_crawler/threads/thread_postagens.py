@@ -40,7 +40,7 @@ class ThreadPostagens(MinhaThread):
         saida=list()
         from criptomante_crawler.crawlers.abstract_crawler import AbstractCrawler
         repository = PostagensRepository()
-        postagens = repository.obtemPostagensNaoProcessadas(limit=limite)
+        postagens = repository.obtemPostagensNaoProcessadasComExecutor(limit=limite)
         if len(postagens)==0:
             sleep(10)
         for postagem in postagens:

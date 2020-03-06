@@ -7,11 +7,33 @@ from criptomante.model.cotacao import Cotacao
 from criptomante.model.snapshot import Snapshot
 from criptomante.model.frase import Frase
 import uuid
+import random
 
 class PostagensRepository(AbstractRepository):
     def obtemPostagensNaoProcessadas(self, limit=100, offset=0)->List[Postagem]:
-        sql = "Select data, url, website from topicos where data_processamento is null order by data  limit :limite offset :offset"
+        sql = "Select data, url, website from topicos where data_processamento is null order by data desc limit :limite offset :offset"
         result = self.fetchAll(sql, {"limite":limit, "offset":offset})
+        saida = list()
+        for obj in result:
+            post = Postagem()
+            post.data=obj["data"]
+            post.website = obj["website"]
+            post.url = obj["url"]
+            saida.append(post)
+        return saida
+
+    def obtemPostagensNaoProcessadasComExecutor(self, limit=100, offset=0)->List[Postagem]:
+        executor = random.randint(1,9999999)
+        params = {"limite":limit, "offset":offset, "executor":executor}
+        sql = """with aux as (select url from topicos where executor is null and data_processamento is null order by random() limit :limite offset :offset)
+                update topicos as topicos
+                set executor=:executor
+                from aux aux
+                where aux.url=topicos.url and topicos.executor is null and topicos.data_processamento is null"""
+        self.execute(sql,params)
+
+        sql = "Select data, url, website from topicos where data_processamento is null and executor = :executor "
+        result = self.fetchAll(sql,params)
         saida = list()
         for obj in result:
             post = Postagem()
@@ -97,6 +119,10 @@ class PostagensRepository(AbstractRepository):
     def quantidade_mensagens_nao_indexadas(self):
         sql = "select count(*) as qnt from mensagens where not indexada"
         return self.fetchOne(sql)["qnt"]
+
+    def quantidade_frases_nao_tratadas(self):
+        sql = "select count(*) as qnt from frases_ocorrencias where  aumento<>queda and texto_tratado is null"
+        return self.fetchOne(sql)["qnt"]
     
     def listarMensagensNaoIndexadas(self, limite:int = 1000000):
         sql = "select mensagem, texto, data, topico_url from mensagens where not indexada limit :limite"
@@ -111,6 +137,12 @@ class PostagensRepository(AbstractRepository):
             saida.append(m)
         return saida
 
+    def listarFrasesNaoTratadas(self, limite:int = 1000000):
+        sql = "select texto from frases_ocorrencias where aumento<>queda and texto_tratado is null limit :limite"
+        result = self.fetchAll(sql, {"limite": limite})
+        saida = [r["texto"] for r in result]
+        return saida
+
     def inserir_tabela_frases(self, frases : List[Frase]):        
         sql = "insert into frases (texto, mensagem, frase) values (:texto, :mensagem, :frase)"
         params = [ {"texto":f.texto, "mensagem":f.mensagem, "frase": uuid.uuid4()} for f in frases]
@@ -122,20 +154,20 @@ class PostagensRepository(AbstractRepository):
         self.execute(sql, params)
 
     def quantidade_frases_nao_indexadas(self, data_limite_de_analise):
-        sql = "select count(*) as qnt from frases where data<= :data_limite and not indexada"
+        sql = "select count(*) as qnt from frases  f join mensagens m on m.mensagem=f.mensagem  where m.data<= :data_limite and not f.indexada"
         return self.fetchOne(sql, {"data_limite":data_limite_de_analise})["qnt"]
     
     def listarFrasesNaoIndexadas(self, limite:int, data_maxima:datetime):
-        sql = "select texto, mensagem, frase from frases f join mensagens m on m.mensagem=f.mensagem where m.data<=:data_maxima and not f.indexada limit :limite"
+        sql = "select f.texto, f.mensagem, f.frase, m.data from frases f join mensagens m on m.mensagem=f.mensagem where m.data<=:data_maxima and not f.indexada limit :limite"
         result = self.fetchAll(sql, {"data_maxima":data_maxima, "limite":limite})
-        return [Frase(r["texto"], r["mensagem"], r["frase"]) for r in result]
+        return [Frase(r["texto"], r["mensagem"], r["frase"], r["data"]) for r in result]
     
     def registrar_ocorrencia_frases_com_numero_aumentos_e_queda(self, parametros:List[dict]):
-        sql = """insert into frases_ocorrencias f (texto, queda, aumento, estavel) values (:texto, :queda, :aumento, :estavel)
-                 ON CONFLICT (texto) 
-                 DO UPDATE SET queda = f.queda + EXCLUDED.queda, 
-                 aumento = f.aumento + EXCLUDED.aumento,
-                 estavel = f.estavel + EXCLUDED.estavel"""
+        sql = """insert into frases_ocorrencias  (texto, queda, aumento, estavel) values (:texto, :Queda, :Aumento, :Estavel)
+                 ON CONFLICT (md5(texto)) 
+                 DO UPDATE SET queda = frases_ocorrencias.queda + EXCLUDED.queda, 
+                 aumento = frases_ocorrencias.aumento + EXCLUDED.aumento,
+                 estavel = frases_ocorrencias.estavel + EXCLUDED.estavel"""
         self.executeMany(sql, parametros)
     
     def sinalizar_frases_indexadas(self, frases:List[str]):
@@ -144,7 +176,7 @@ class PostagensRepository(AbstractRepository):
         self.execute(sql, params)
     
     def criar_tabela_frases_recentes(self):
-        sql = "select max(m.data) as data from frases f join mensagens m on m.mensagem=f.mensagem"
+        sql = "select m.data from mensagens m join frases f using (mensagem) order by m.data desc limit 1"
         ultima_frase = self.fetchOne(sql)["data"]
         limite_inferior = ultima_frase - timedelta(hours=24)
 
@@ -153,9 +185,9 @@ class PostagensRepository(AbstractRepository):
         self.execute(sql)
         sql = """
                 insert into frases_recentes (frase, texto, mensagem)
-                select frase, texto, mensagem
-                from frases f
-                join mensagens m on m.mensagem=f.mensagem
+                select frase, f.texto, f.mensagem
+                from mensagens m
+                join frases f on m.mensagem=f.mensagem
                 where m.data>=:limite_inferior
         """
         self.execute(sql, {"limite_inferior":limite_inferior})
@@ -168,8 +200,7 @@ class PostagensRepository(AbstractRepository):
     
     def listar_frases_com_tendencia(self):
         sql = """select texto from frases_ocorrencias fo
-                where  (fo.aumento>3 or fo.queda>3)
-                and ((fo.aumento>fo.queda*3) or (fo.queda>fo.aumento*3))"""
+                where  (fo.aumento<>fo.queda)"""
         result = self.fetchAll(sql)
         return [r["texto"] for r in result]
     
@@ -177,7 +208,7 @@ class PostagensRepository(AbstractRepository):
     def insere_tabela_associacoes(self, associacoes, tipo_associacao):
         self.begin()
         sql = "delete from frases_associacoes where tipo_associacao=:tipo_associacao"
-        self.execute(sql)
+        self.execute(sql, {"tipo_associacao":tipo_associacao})
         sql = "insert into frases_associacoes (frase, frase_recente, tipo_associacao) values (:frase, :frase_recente, :tipo_associacao)"
         params = [{"frase":a["frase"], "frase_recente":a["frase_recente"], "tipo_associacao":tipo_associacao} for a in associacoes]
         self.executeMany(sql, params)
@@ -187,21 +218,118 @@ class PostagensRepository(AbstractRepository):
         sql = """ 
                 update frases_associacoes as fa
                 set tendencia = (case when fo.queda>fo.aumento then 'QUEDA' else 'AUMENTO' end)
-                where fo.frase=fa.texto
+                from frases_ocorrencias fo
+                where md5(fo.texto)=md5(fa.frase)
             """
         self.execute(sql)
+    
+    def tratar_frases(self, frases_tratadas):
+        sql = "update frases_ocorrencias set texto_tratado=:tratada where md5(texto)=md5(:original)"
+        self.execute(sql, frases_tratadas)
 
     def listarAssociacoes(self, tipo_associacao):
-        sql = "select frase, frase_recente, queda, aumento, estavel from frases_associacoes where tipo_associacao = :tipo_associacao"
+        sql = "select frase, frase_recente, tendencia from frases_associacoes where tipo_associacao = :tipo_associacao"
         return self.fetchAll(sql, {"tipo_associacao":tipo_associacao})
     
     def insere_resultado_analise_textual(self, parametros, tipo_associacao):
         sql = "delete from resultado_textual where tipo_associacao=:tipo_associacao"
         self.execute(sql, {"tipo_associacao":tipo_associacao})
-        sql = "insert into resultado_textual (aumento, queda, tipo_associacao) values (:aumento, :queda, :tipo_associacao)"
+        sql = "insert into resultado_textual (aumento, queda, tipo_associacao) values (:AUMENTO, :QUEDA, :tipo_associacao)"
         parametros["tipo_associacao"] = tipo_associacao
         self.execute(sql, parametros)
         self.commit()
+    
+    def remove_frases_vazias(self):
+        print("Removendo frases vazias")
+        sql = """
+                delete from frases where REGEXP_REPLACE(texto, '[, 0123456789]+','') =''
+                """        
+        self.execute(sql)
+        while (True):
+            qnt = 0
+            print("Frase vazia removida...")
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": ' %'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": ',%'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '1%'}))
+
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '2%'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '3%'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '4%'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '5%'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '6%'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '7%'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '8%'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '9%'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 2) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '0%'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '% '}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%,'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%1'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%2'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%3'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%4'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%5'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%6'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%7'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%8'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%9'}))
+
+            sql = "update frases set texto=SUBSTRING(texto from 1 for length(texto)-1) where texto like  :formato returning *"
+            qnt += len(self.fetchAll(sql, {"formato": '%0'}))
+
+            if qnt>0:
+                print("Frases alteradas: {}".format(qnt))
+                continue
+            break                        
+    
+        sql = """
+                delete from frases where REGEXP_REPLACE(texto, '[, 0123456789]+','') =''
+                """        
+        self.execute(sql)
 
 
 
