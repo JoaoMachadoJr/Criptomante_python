@@ -22,6 +22,7 @@
 	<script src="{% static 'js/main/jquery.min.js' %}"></script>
 	<script src="{% static 'js/main/bootstrap.bundle.min.js' %}"></script>
 	<script src="{% static 'js/plugins/loaders/blockui.min.js' %}"></script>
+	<script src="{% static 'js/plugins/visualization/echarts/echarts.min.js' %}"></script>
 	<!-- /core JS files -->
 
 	<!-- Theme JS files -->
@@ -35,7 +36,15 @@
 	<script src="{% static 'js/demo_pages/dashboard.js' %}"></script>
 	<script src="{% static 'js/demo_charts/pages/dashboard/light/streamgraph.js' %}"></script>
 	<script src="{% static 'js/demo_charts/pages/dashboard/light/sparklines.js' %}"></script>
-	<script src="{% static 'js/demo_charts/pages/dashboard/light/lines.js' %}"></script>	
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="app_sales" grafico="linhas_coloridas" %} 
+	</script>
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="app_sales2" grafico="linhas_coloridas" %} 
+	</script>
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="today-revenue" grafico="linhas_azul" %} 
+	</script>
 	<script src="{% static 'js/demo_charts/pages/dashboard/light/areas.js' %}"></script>
 	<script src="{% static 'js/demo_charts/pages/dashboard/light/donuts.js' %}"></script>
 	<script src="{% static 'js/demo_charts/pages/dashboard/light/bars.js' %}"></script>
@@ -239,7 +248,7 @@
 								</div>
 							</div>
 
-							<div class="chart mb-2" id="app_sales"></div>
+							<div class="chart mb-2" id="app_sales2"></div>
 							<div class="chart" id="monthly-sales-stats"></div>
 						</div>
 						<!-- /sales stats -->
