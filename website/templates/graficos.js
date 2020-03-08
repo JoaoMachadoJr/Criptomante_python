@@ -810,11 +810,11 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
             },
 
             // Add legend
-            legend: {
-                data: [legenda],
-                itemHeight: 8,
-                itemGap: 20
-            },
+           // legend: {
+           //     data: [legenda],
+           //     itemHeight: 8,
+           //     itemGap: 20
+           // },
 
             // Add tooltip
             tooltip: {
@@ -828,7 +828,7 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
                 formatter: function(params) {
 					const param = params[0];
 					
-					return "Data: "+param.value[0] + "<br>Valor : " + param.value[1]
+					return "Data: "+param.value[0] + "<br>"+param.seriesName+": " + param.value[1]
 				}
             },
 
@@ -889,12 +889,13 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
                     data: valores,
                     smooth: true,
                     symbolSize: 0,
-                    markLine: {
-                        data: [{
-                            type: 'average',
-                            name: 'Average'
-                        }]
-                    },
+                    //
+                   // markLine: {
+                   //     data: [{
+                    //        type: 'average',
+                    //        name: 'Average'
+                    //    }]
+                    //},
                     itemStyle: {
                         normal: {
                             borderWidth: 2
@@ -936,6 +937,182 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
 };
 
 
+var _area = function(elemento, legenda, valores) {
+    if (typeof echarts == 'undefined') {
+        console.warn('Warning - echarts.min.js is not loaded.');
+        return;
+    }
+
+    // Define element
+    var line_basic_element = document.getElementById(elemento);
+    
+
+    //
+    // Charts configuration
+    //
+
+    if (line_basic_element) {
+
+        // Initialize chart
+        var line_basic = echarts.init(line_basic_element);
+        
+
+        //
+        // Chart config
+        //
+
+        // Options
+        line_basic.setOption({
+
+            // Define colors
+            color: ['#2cc7c8', '#66BB6A'],
+
+            // Global text styles
+            textStyle: {
+                fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+                fontSize: 13
+            },
+
+            // Chart animation duration
+            animationDuration: 750,
+
+            // Setup grid
+            grid: {
+                left: 50,
+                right: 40,
+                top: 0,
+                bottom: 0,
+                containLabel: false
+            },
+
+            // Add legend
+           // legend: {
+           //     data: [legenda],
+           //     itemHeight: 8,
+           //     itemGap: 20
+           // },
+
+            // Add tooltip
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0,0,0,0.75)',
+                padding: [10, 15],
+                textStyle: {
+                    fontSize: 13,
+                    fontFamily: 'Roboto, sans-serif'
+                },
+                formatter: function(params) {
+					const param = params[0];					
+					return "Data: "+param.value[0] + "<br>"+param.seriesName+": " + param.value[1]
+				}
+            },
+
+            // Horizontal axis
+            xAxis: [{
+                type: 'time',
+                boundaryGap: false,
+                axisLabel: {
+                    color: '#333'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#999'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: ['#eee']
+                    }
+                },
+                axisLabel: {
+                    formatter: (function(value){
+                        return moment(value).format('D/M/Y');
+                    })
+                }
+            }],
+
+            // Vertical axis
+            yAxis: [{
+                show: false,
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value}',
+                    color: '#333'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#999'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: ['#eee']
+                    }
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
+                    }
+                }
+            }],
+
+            // Add series
+            series: [
+                {
+                    name: legenda,
+                    type: 'bar',
+                    data: valores,
+                    smooth: false,
+                    symbolSize: 0,
+                    areaStyle: {
+                        normal: {
+                            opacity: 1
+                        }
+                    },
+                    //
+                   // markLine: {
+                   //     data: [{
+                    //        type: 'average',
+                    //        name: 'Average'
+                    //    }]
+                    //},
+                    itemStyle: {
+                        normal: {
+                            borderWidth: 2
+                        }
+                    },
+                    lineStyle: {
+                        width: 0
+                    }
+                }
+            ]
+        });
+    }
+
+
+    //
+    // Resize charts
+    //
+
+    // Resize function
+    var triggerChartResize = function() {
+        line_basic_element && line_basic.resize();
+    };
+
+    // On sidebar width change
+    var sidebarToggle = document.querySelector('.sidebar-control');
+    sidebarToggle && sidebarToggle.addEventListener('click', triggerChartResize);
+
+    // On window resize
+    var resizeCharts;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeCharts);
+        resizeCharts = setTimeout(function () {
+            triggerChartResize();
+        }, 200);
+    });
+};
 
 
 
@@ -948,6 +1125,9 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     if ('{{grafico}}'=='basico'){
         _linesBasicLightExample('{{componente}}', {{ legenda|default:"'Valores'" }},{{valores}} );
+    };
+    if ('{{grafico}}'=='area'){
+        _area('{{componente}}', {{ legenda|default:"'Valores'" }},{{valores}} );
     };
     
 

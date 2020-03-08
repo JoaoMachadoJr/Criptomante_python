@@ -13,5 +13,6 @@ def website(request):
     params["limite_inferior"] = repository.limite_inferior(listagem)"""
     params = dict()
     previsao_numerica = ResultadosRepository().listar_previsao_numerica('media')
-    params["valores"] = [ [p["data"].strftime("%Y-%m-%d"), float(p["valor"])] for p in previsao_numerica]
+    params["previsao_numerica"] = [ [p["data"].strftime("%Y-%m-%d"), float(p["valor"])] for p in previsao_numerica]
+    params["transacoes"] = [ [p["data"].strftime("%Y-%m-%d"), float(p["transacoes"])] for p in previsao_numerica]
     return render(request, 'website.html', params)

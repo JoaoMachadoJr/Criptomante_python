@@ -37,7 +37,10 @@
 	<script src="{% static 'js/demo_charts/pages/dashboard/light/streamgraph.js' %}"></script>
 	<script src="{% static 'js/demo_charts/pages/dashboard/light/sparklines.js' %}"></script>
 	<script type="text/javascript">
-		{% include "graficos.js" with componente="line_basic" grafico="basico" legenda="'Valor'" %} 
+		{% include "graficos.js" with componente="analise_consolidada" grafico="basico" legenda="'Valor'" valores=previsao_numerica %} 
+	</script>
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="analise_consolidada_transacoes" grafico="area" legenda="'Transações'" valores=transacoes %} 
 	</script>
 	<script type="text/javascript">
 		{% include "graficos.js" with componente="app_sales2" grafico="linhas_coloridas" %} 
@@ -97,15 +100,8 @@
 						<!-- Sales stats -->
 						<div class="card">
 							<div class="card-header header-elements-inline">
-								<h6 class="card-title">Análise Consolidada</h6>
-								<div class="header-elements">
-									<select class="form-control custom-select" id="select_date">
-										<option value="val1">June, 29 - July, 5</option>
-										<option value="val2">June, 22 - June 28</option>
-										<option value="val3" selected>June, 15 - June, 21</option>
-										<option value="val4">June, 8 - June, 14</option>
-									</select>
-			                	</div>
+								<h5 class="card-title">Análise Consolidada - Estimativa de valor futuro do Bitcoin</h5>
+								<i class="icon-stars"></i>
 							</div>
 
 							<div class="card-body py-0">
@@ -134,11 +130,14 @@
 							</div>
 							<div class="card-body">
 								<div class="chart-container">
-									<div class="chart has-fixed-height" id="line_basic"></div>
+									<div class="chart has-fixed-height" id="analise_consolidada"></div>
+								</div>
+								<div class="chart-container">
+									<div class="chart has-half-fixed-height"  id="analise_consolidada_transacoes"></div>
 								</div>
 							</div>
-							<div class="chart mb-2" id="app_sales"></div>
-							<div class="chart" id="monthly-sales-stats"></div>
+					
+							
 						</div>
 						<!-- /sales stats -->
 

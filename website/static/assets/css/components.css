@@ -12460,6 +12460,9 @@ a.fc-more {
 .has-fixed-height {
   height: 400px; }
 
+.has-half-fixed-height {
+  height: 200px; }
+
 .chart-pie {
   width: 100%;
   height: 400px;
