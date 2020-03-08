@@ -9,7 +9,7 @@ class RegistradorDeResultados:
         registrar = cotacoes
         _data_anterior=None
         for _data in previsoes:
-            if _data_anterior != None:
+            if (_data_anterior != None) and (_data["data"]<hoje+timedelta(days=100)):
                 diferenca = (_data["data"] - _data_anterior["data"]).days
                 variacao = (_data["valor"] - _data_anterior["valor"])/diferenca
                 for i in range(diferenca):

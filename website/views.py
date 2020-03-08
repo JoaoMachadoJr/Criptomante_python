@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from criptomante.repository.nprevisoes import NPrevisoesRepository
+from criptomante.repository.resultados_repository import ResultadosRepository
 # Create your views here.
 def website(request):
     """repository = NPrevisoesRepository()
@@ -10,4 +11,7 @@ def website(request):
     params["labels"] = repository.labels(listagem)
     params["valores"] = repository.valores(listagem)
     params["limite_inferior"] = repository.limite_inferior(listagem)"""
-    return render(request, 'website.html', dict())
+    params = dict()
+    previsao_numerica = ResultadosRepository().listar_previsao_numerica('media')
+    params["valores"] = [ [p["data"].strftime("%Y-%m-%d"), float(p["valor"])] for p in previsao_numerica]
+    return render(request, 'website.html', params)

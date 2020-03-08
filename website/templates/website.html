@@ -37,7 +37,7 @@
 	<script src="{% static 'js/demo_charts/pages/dashboard/light/streamgraph.js' %}"></script>
 	<script src="{% static 'js/demo_charts/pages/dashboard/light/sparklines.js' %}"></script>
 	<script type="text/javascript">
-		{% include "graficos.js" with componente="app_sales" grafico="linhas_coloridas" %} 
+		{% include "graficos.js" with componente="line_basic" grafico="basico" legenda="'Valor'" %} 
 	</script>
 	<script type="text/javascript">
 		{% include "graficos.js" with componente="app_sales2" grafico="linhas_coloridas" %} 
@@ -132,7 +132,11 @@
 									</div>
 								</div>
 							</div>
-
+							<div class="card-body">
+								<div class="chart-container">
+									<div class="chart has-fixed-height" id="line_basic"></div>
+								</div>
+							</div>
 							<div class="chart mb-2" id="app_sales"></div>
 							<div class="chart" id="monthly-sales-stats"></div>
 						</div>

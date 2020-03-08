@@ -25,4 +25,10 @@ class ResultadosRepository(AbstractRepository):
         sql = "insert into graficos.previsao_numerica (data, valor, transacoes, algoritmo) values (:data, :valor, :transacoes, :algoritmo)"
         self.executeMany(sql, [{"data": p["data"], "valor": p["valor"], "transacoes": p["transacoes"], "algoritmo": algoritmo} for p in dados])
         self.commit()
+
+    def listar_previsao_numerica(self, algoritmo):
+        
+        sql = "select * from graficos.previsao_numerica where algoritmo=:algoritmo order by data"
+        return self.fetchAll(sql, {"algoritmo": algoritmo})
+
         
