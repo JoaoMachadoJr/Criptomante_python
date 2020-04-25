@@ -1,3 +1,4 @@
 criptomante_crawler/lib*
 *_pycache_*
 criptomante/repository/__pycache__/*
+modelo.joblib
