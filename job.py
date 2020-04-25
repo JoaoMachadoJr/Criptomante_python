@@ -5,7 +5,7 @@ def run():
     from pathlib import Path
     env_path = Path('C:\\@work\\pessoal\\Criptomante_python\\.env')
     load_dotenv(dotenv_path=env_path)
-    
+
     import sys
     sys.path.append('C:\\@work\\pessoal\\Criptomante_python')
     from criptomante.analyzers.analyzer_numerico import AnalizerNumerico
@@ -17,6 +17,7 @@ def run():
     import time
     
     repositorio = PostagensRepository()
+    repositorio.limparExecutores()
     ultima = repositorio.obtemPostagemMaisRecente(100)
     if ultima==None:
         crawler_reddit = CrawlerReddit("https://api.pushshift.io/reddit/search/submission/?subreddit=Bitcoin&sort_type=created_utc&sort=asc")

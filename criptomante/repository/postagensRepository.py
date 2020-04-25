@@ -42,6 +42,11 @@ class PostagensRepository(AbstractRepository):
             post.url = obj["url"]
             saida.append(post)
         return saida
+
+    def limparExecutores(self):
+        print("Limpando executores anteriores")
+        sql = "update topicos set executor=null where executor is not null"
+        self.execute(sql)
     
     def obtemPostagemMaisRecente(self, offset = 0)->Postagem:
         sql = "select data, url, website from topicos order by data desc offset :offset limit 1"
