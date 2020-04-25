@@ -1,6 +1,11 @@
  
 
 def run():
+    from dotenv import load_dotenv
+    from pathlib import Path
+    env_path = Path('C:\\@work\\pessoal\\Criptomante_python\\.env')
+    load_dotenv(dotenv_path=env_path)
+    
     import sys
     sys.path.append('C:\\@work\\pessoal\\Criptomante_python')
     from criptomante.analyzers.analyzer_numerico import AnalizerNumerico
