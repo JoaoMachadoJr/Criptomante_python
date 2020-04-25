@@ -49,9 +49,7 @@ class GerenciadorThreads(MinhaThread):
             self.resolverTimeout(self.classe_threads)
             threads_ativas, threads_totais, threads_finalizadas, threads_em_fila = self.threadsAtivas(self.classe_threads.__name__)
 
-            #if (self.imprimir_progresso) and (segundos==5):
             print("Threads {}: {}/{} Concluídas".format(self.classe_threads.__name__,threads_finalizadas,threads_totais))
-            #    segundos=0
             
             while (threads_ativas<self.classe_threads.quantidade_limite) and (threads_em_fila>0):
                 a_iniciar = GerenciadorThreads.a_iniciar[self.classe_threads.__name__]

@@ -24,12 +24,10 @@ class ThreadPostagens(MinhaThread):
     def executar(self):
         
         mensagens = self.crawler.processar_postagem(self.url, self.post)
-        #print("Sucesso ao ler MSG "+self.url)                
         repository = PostagensRepository()
         repository.insereMensagens(mensagens)
         repository.sinalizaPostagemProcessada(self.url)
         self.continuar=False
-        #print("Sucesso ao gravar MSG "+self.url)
                                                 
     def mensagem_erro(self, e):
         print("Erro ao ler MSG "+self.url)
@@ -42,7 +40,7 @@ class ThreadPostagens(MinhaThread):
         repository = PostagensRepository()
         postagens = repository.obtemPostagensNaoProcessadasComExecutor(limit=limite)
         if len(postagens)==0:
-            sleep(10)
+            ThreadPostagens.esperando_novos=False
         for postagem in postagens:
             crawler:AbstractCrawler = ThreadPostagens.getCrawler(postagem.website)
             t = ThreadPostagens()

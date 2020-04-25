@@ -1,0 +1,33 @@
+{% autoescape off %}
+{% load static %}
+                        <!-- Marketing campaigns -->													
+							
+
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+                                            {% for header in categorias %}
+                                                <th>{{header}}</th>
+                                            {% endfor %}
+											
+										</tr>
+									</thead>
+									<tbody>
+                                        {% for dado in dados %}
+                                        <tr>
+                                        {% for header in categorias %}
+                                        {% for key, value in dado.items %}
+                                        {% if key == header %}                                        											
+												{{ value }}											
+                                        {% endif %}
+										{% endfor %}
+                                        {% endfor %}
+                                        </tr>
+                                        {% endfor %}																			
+									</tbody>
+								</table>
+							</div>
+						
+						<!-- /marketing campaigns -->
+{% endautoescape %}                        

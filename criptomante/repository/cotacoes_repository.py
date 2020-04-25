@@ -54,7 +54,7 @@ class CotacoesRepository(AbstractRepository):
         sql = "delete from temp.nprevisao where algoritmo = :algoritmo"
         self.execute(sql, {"algoritmo":algoritmo})
         
-        sql = "insert into x (data, label, valor, algoritmo) values (:data, :label, :valor, :algoritmo)"
+        sql = "insert into temp.nprevisao (data, label, valor, algoritmo) values (:data, :label, :valor, :algoritmo)"
         params = list()
         for key in snapshot.momentos:
             param=dict()

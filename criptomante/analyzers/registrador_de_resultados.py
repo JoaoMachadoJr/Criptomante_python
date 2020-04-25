@@ -2,7 +2,16 @@ from datetime import datetime, timedelta
 from criptomante.repository.resultados_repository import ResultadosRepository
 
 class RegistradorDeResultados:
+    def registrar_resultados(self):
+        self.registrar_resultado_numerico()
+        self.registrar_resultado_textual()
+    
+    def registrar_resultado_textual(self):
+        print("registrar_resultado_textual")
+        ResultadosRepository().gravar_dados_tabela_comentarios()
+        
     def registrar_resultado_numerico(self):
+        print("registrar_resultado_numerico")
         hoje = datetime.today()
         cotacoes = ResultadosRepository().cotacoes_medias_diarias(hoje - timedelta(days=180), hoje)
         previsoes = ResultadosRepository().listar_previsoes_numericas(hoje, 'media')
@@ -22,6 +31,8 @@ class RegistradorDeResultados:
         
         ResultadosRepository().gravar_previsao_numerica(registrar, 'media')
 
+        
+
 if __name__ == "__main__":
-    RegistradorDeResultados().registrar_resultado_numerico()
+    RegistradorDeResultados().registrar_resultados()
 

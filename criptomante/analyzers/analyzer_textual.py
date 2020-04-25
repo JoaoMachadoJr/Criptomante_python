@@ -28,10 +28,10 @@ import pandas.io.sql as sqlio
 from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer
 from sklearn.base import TransformerMixin
 from sklearn.pipeline import Pipeline
-
-
-
-
+from joblib import dump, load
+from os import path
+import criptomante.util.machine_learn as machine_learn
+from criptomante.repository.resultados_repository import ResultadosRepository
 
 class AnalyzerTextual:
 
@@ -39,15 +39,15 @@ class AnalyzerTextual:
     
 
     def analisar(self):
-        #self.criar_tabela_frases()
-        #self.criar_tabela_ocorrencia_frases_com_numero_aumentos_e_queda()
-        #self.preencher_texto_tratado()
+        self.criar_tabela_frases()
+        self.criar_tabela_ocorrencia_frases_com_numero_aumentos_e_queda()
+        self.preencher_texto_tratado()
         self.criar_tabela_frases_recentes()
-        #self.criar_tabela_associacao_frases_recentes_com_tabela_de_frases_agrupada_usando_Igualdade_como_criterio()
-        #self.criar_tabela_associacao_frases_recentes_com_tabela_de_frases_agrupada_usando_linguagem_natural_como_criterio()
-        #self.preencher_tabela_associacoes_com_ocorrencias()
-        #self.criar_tabela_resultado_analise_textual() #Essa tabela terá como colunas, o tipo de analise, o resultado e um label.
-        self.carregar_dataset()
+        self.criar_tabela_associacao_frases_recentes_com_tabela_de_frases_agrupada_usando_Igualdade_como_criterio()
+        #######self.criar_tabela_associacao_frases_recentes_com_tabela_de_frases_agrupada_usando_linguagem_natural_como_criterio()
+        self.preencher_tabela_associacoes_com_ocorrencias()
+        self.criar_tabela_resultado_analise_textual() #Essa tabela terá como colunas, o tipo de analise, o resultado e um label.
+        self.realizar_analise_semantica()
 
     
 
@@ -90,7 +90,7 @@ class AnalyzerTextual:
             if len(frases)==0:        
                 break
             print("Montando frases")
-            for m in np.array_split(frases, 6):
+            for m in np.array_split(frases, 9 ):
                 ThreadsGenericas.construir(self.tratar_frases, m)
             ThreadsGenericas.resultado()                               
             feitos = feitos + len(frases)
@@ -197,8 +197,8 @@ class AnalyzerTextual:
     def criar_tabela_associacao_frases_recentes_com_tabela_de_frases_agrupada_usando_Igualdade_como_criterio(self):
         print("criar_tabela_associacao_frases_recentes_com_tabela_de_frases_agrupada_usando_Igualdade_como_criterio")
         repositorio = PostagensRepository()
-        frases_recentes = repositorio.listar_frases_recentes()
-        frases = repositorio.listar_frases_com_tendencia()
+        frases_recentes = [t.lower() for t in repositorio.listar_frases_recentes()]
+        frases = [t.lower() for t in repositorio.listar_frases_com_tendencia()]
         resultado = list()
         for frase in frases:
             if frase in frases_recentes:
@@ -210,6 +210,7 @@ class AnalyzerTextual:
 
     def criar_tabela_associacao_frases_recentes_com_tabela_de_frases_agrupada_usando_linguagem_natural_como_criterio(self):
         print("criar_tabela_associacao_frases_recentes_com_tabela_de_frases_agrupada_usando_linguagem_natural_como_criterio")
+        self.nlp = en_core_web_lg.load()
         repositorio = PostagensRepository()
         frases_recentes = repositorio.listar_frases_recentes()
         frases = repositorio.listar_frases_com_tendencia()
@@ -219,7 +220,7 @@ class AnalyzerTextual:
             if frase_equivalente!=None:
                 nova = dict()
                 nova["frase_recente"] = frase_equivalente
-                nova["frase"]= frase.texto
+                nova["frase"]= frase
                 resultado.append(nova)
         repositorio.insere_tabela_associacoes(resultado, "Equivalencia Semantica")
     
@@ -262,7 +263,7 @@ class AnalyzerTextual:
         sql = """   with variacoes as (select cot2.valor/cot1.valor as variacao, cot1.data
                         from cotacoes cot1
                         join cotacoes cot2 on (cot1.data + interval '1 day')=cot2.data)
-                    select string_agg(texto_tratado, ' ') as texto, 
+                    select string_agg(texto_tratado, '\n') as texto, 
                             (case when variacao>1.05 then 1 when variacao<0.95 then 0 else -1 end) as tendencia                    
                     from frases f
                     join mensagens m on m.mensagem=f.mensagem
@@ -275,9 +276,8 @@ class AnalyzerTextual:
 
         print ("carregado. Tamanho: {}".format(self.dataframe.size))
 
-        import criptomante.util.machine_learn as machine_learn
-        machine_learn.realizar_teste(self.dataframe)
-
+        return self.dataframe
+        
 
 
     def gerar_frases(self, mensagem:Mensagem):        
@@ -292,17 +292,21 @@ class AnalyzerTextual:
         doc = self.nlp(str(frase))
         saida = dict()
         saida["original"] = frase
-        saida["tratada"] = " ".join([f.lemma_.lower() for f in doc if not f.is_stop and f.is_alpha and not f.lemma_ in string.punctuation])
+        saida["tratada"] = ""+" ".join([f.lemma_.lower() for f in doc if not f.is_stop and f.is_alpha and not f.lemma_ in string.punctuation and  (f.lemma_ in self.nlp.vocab or f.text in self.nlp.vocab)])
         repositorio.tratar_frases(saida)
         return ["ok"]
         
     
     def equivalencia_semantica(self, frase, frases_recentes):
         doc_frase_antiga = self.nlp(frase)
+        if (not doc_frase_antiga) or (not doc_frase_antiga.vector_norm):
+            return None
         frase_mais_proxima = None
         proximidade = 0
         for f in frases_recentes:
             doc_frase_recente = self.nlp(f)
+            if (not doc_frase_recente) or (not doc_frase_recente.vector_norm):
+                continue
             p = doc_frase_recente.similarity(doc_frase_antiga)
             if p>0.9 and p>proximidade:
                 proximidade = p
@@ -317,6 +321,37 @@ class AnalyzerTextual:
         while (len(frase)>0) and (frase[len(frase)-1] not in CARACTERES_A_SEREM_PERMITIDOS_NO_FIM):
             frase = frase[0:len(frase)-1]
         return frase
+    
+    def realizar_analise_semantica(self):
+        #Verifica se ja existe um arquivo de modelo recente
+
+        dados = ResultadosRepository().recuperar_analise_semantica()
+        
+        if (dados!=None) and (datetime.now() + timedelta(days=7) > dados["datahora"]):
+            modelo = load('modelo.joblib')
+        else:
+            dados:dict = machine_learn.contruir_modelo(self.carregar_dataset())
+            dump(dados["modelo"], 'modelo.joblib')
+            ResultadosRepository().gravar_analise_semantica(dados)
+            modelo=dados["modelo"]
+        
+        texto_recente = PostagensRepository().texto_recente()
+
+        previsao = modelo.predict([texto_recente])
+        ResultadosRepository().gravar_previsao_analise_semantica(previsao[0])
+        print(previsao)
+        
+        
+        
+        
+
+        
+        
+
+                
+
+
+        
 
     
 

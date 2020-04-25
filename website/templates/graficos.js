@@ -12,14 +12,14 @@
 // ------------------------------
 
 
-var _AppSalesLinesChart = function(element, height) {
+var _AppSalesLinesChart = function (element, height) {
     if (typeof d3 == 'undefined' || typeof d3.tip == 'undefined') {
         console.warn('Warning - d3.min.js is not loaded.');
         return;
     }
 
     // Initialize chart only if element exsists in the DOM
-    if($(element).length > 0) {
+    if ($(element).length > 0) {
 
 
         // Basic setup
@@ -27,7 +27,7 @@ var _AppSalesLinesChart = function(element, height) {
 
         // Define main variables
         var d3Container = d3.select(element),
-            margin = {top: 5, right: 30, bottom: 30, left: 50},
+            margin = { top: 5, right: 30, bottom: 30, left: 50 },
             width = d3Container.node().getBoundingClientRect().width - margin.left - margin.right,
             height = height - margin.top - margin.bottom;
 
@@ -38,8 +38,8 @@ var _AppSalesLinesChart = function(element, height) {
                 return '<ul class="list-unstyled mb-1">' +
                     '<li>' + '<div class="font-size-base my-1"><i class="icon-circle-left2 mr-2"></i>' + d.name + ' app' + '</div>' + '</li>' +
                     '<li>' + 'Sales: &nbsp;' + '<span class="font-weight-semibold float-right">' + d.value + '</span>' + '</li>' +
-                    '<li>' + 'Revenue: &nbsp; ' + '<span class="font-weight-semibold float-right">' + '$' + (d.value * 25).toFixed(2) + '</span>' + '</li>' + 
-                '</ul>';
+                    '<li>' + 'Revenue: &nbsp; ' + '<span class="font-weight-semibold float-right">' + '$' + (d.value * 25).toFixed(2) + '</span>' + '</li>' +
+                    '</ul>';
             });
 
         // Format date
@@ -62,8 +62,8 @@ var _AppSalesLinesChart = function(element, height) {
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .append('g')
-                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-                .call(tooltip);
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+            .call(tooltip);
 
 
         // Add date range switcher
@@ -76,7 +76,7 @@ var _AppSalesLinesChart = function(element, height) {
         // Load data
         // ------------------------------
 
-        d3.csv('../../../../static/demo_data/dashboard/app_sales.csv', function(error, data) {
+        d3.csv('../../../../static/demo_data/dashboard/app_sales.csv', function (error, data) {
             formatted = data;
             redraw();
         });
@@ -88,14 +88,14 @@ var _AppSalesLinesChart = function(element, height) {
         // Add events
         var altKey;
         d3.select(window)
-            .on('keydown', function() { altKey = d3.event.altKey; })
-            .on('keyup', function() { altKey = false; });
-    
+            .on('keydown', function () { altKey = d3.event.altKey; })
+            .on('keyup', function () { altKey = false; });
+
         // Set terms of transition on date change   
         function change() {
-          d3.transition()
-              .duration(altKey ? 7500 : 500)
-              .each(redraw);
+            d3.transition()
+                .duration(altKey ? 7500 : 500)
+                .each(redraw);
         }
 
 
@@ -110,34 +110,34 @@ var _AppSalesLinesChart = function(element, height) {
 
             // Create data nests
             var nested = d3.nest()
-                .key(function(d) { return d.type; })
+                .key(function (d) { return d.type; })
                 .map(formatted)
-            
+
             // Get value from menu selection
             // the option values correspond
             //to the [type] value we used to nest the data  
             var series = menu.value;
-            
+
             // Only retrieve data from the selected series using nest
             var data = nested[series];
-            
+
             // For object constancy we will need to set 'keys', one for each type of data (column name) exclude all others.
-            color.domain(d3.keys(data[0]).filter(function(key) { return (key !== 'date' && key !== 'type'); }));
+            color.domain(d3.keys(data[0]).filter(function (key) { return (key !== 'date' && key !== 'type'); }));
 
             // Setting up color map
-            var linedata = color.domain().map(function(name) {
+            var linedata = color.domain().map(function (name) {
                 return {
-                            name: name,
-                            values: data.map(function(d) {
-                                return {name: name, date: parseDate(d.date), value: parseFloat(d[name], 10)};
-                            })
-                        };
-                    });
+                    name: name,
+                    values: data.map(function (d) {
+                        return { name: name, date: parseDate(d.date), value: parseFloat(d[name], 10) };
+                    })
+                };
+            });
 
             // Draw the line
             var line = d3.svg.line()
-                .x(function(d) { return x(d.date); })
-                .y(function(d) { return y(d.value); })
+                .x(function (d) { return x(d.date); })
+                .y(function (d) { return y(d.value); })
                 .interpolate('cardinal');
 
 
@@ -148,16 +148,16 @@ var _AppSalesLinesChart = function(element, height) {
             // Horizontal
             var x = d3.time.scale()
                 .domain([
-                    d3.min(linedata, function(c) { return d3.min(c.values, function(v) { return v.date; }); }),
-                    d3.max(linedata, function(c) { return d3.max(c.values, function(v) { return v.date; }); })
+                    d3.min(linedata, function (c) { return d3.min(c.values, function (v) { return v.date; }); }),
+                    d3.max(linedata, function (c) { return d3.max(c.values, function (v) { return v.date; }); })
                 ])
                 .range([0, width]);
 
             // Vertical
             var y = d3.scale.linear()
                 .domain([
-                    d3.min(linedata, function(c) { return d3.min(c.values, function(v) { return v.value; }); }),
-                    d3.max(linedata, function(c) { return d3.max(c.values, function(v) { return v.value; }); })
+                    d3.min(linedata, function (c) { return d3.min(c.values, function (v) { return v.value; }); }),
+                    d3.max(linedata, function (c) { return d3.max(c.values, function (v) { return v.value; }); })
                 ])
                 .range([height, 0]);
 
@@ -180,9 +180,9 @@ var _AppSalesLinesChart = function(element, height) {
                 .scale(y)
                 .orient('left')
                 .ticks(6)
-                .tickSize(0 -width)
+                .tickSize(0 - width)
                 .tickPadding(8);
-            
+
 
 
             //
@@ -209,47 +209,47 @@ var _AppSalesLinesChart = function(element, height) {
             // Bind the data
             var lines = svg.selectAll('.app-sales-lines')
                 .data(linedata)
-         
+
             // Append a group tag for each line
             var lineGroup = lines
                 .enter()
                 .append('g')
-                    .attr('class', 'app-sales-lines')
-                    .attr('id', function(d){ return d.name + '-line'; });
+                .attr('class', 'app-sales-lines')
+                .attr('id', function (d) { return d.name + '-line'; });
 
             // Append the line to the graph
             lineGroup.append('path')
                 .attr('class', 'd3-line d3-line-medium')
-                .style('stroke', function(d) { return color(d.name); })
+                .style('stroke', function (d) { return color(d.name); })
                 .style('opacity', 0)
-                .attr('d', function(d) { return line(d.values[0]); })
+                .attr('d', function (d) { return line(d.values[0]); })
                 .transition()
-                    .duration(500)
-                    .delay(function(d, i) { return i * 200; })
-                    .style('opacity', 1);
-          
+                .duration(500)
+                .delay(function (d, i) { return i * 200; })
+                .style('opacity', 1);
+
 
 
             // Append circles
             // ------------------------------
 
             var circles = lines.selectAll('circle')
-                .data(function(d) { return d.values; })
+                .data(function (d) { return d.values; })
                 .enter()
                 .append('circle')
-                    .attr('class', 'd3-line-circle d3-line-circle-medium')
-                    .attr('cx', function(d,i){return x(d.date)})
-                    .attr('cy',function(d,i){return y(d.value)})
-                    .attr('r', 3)
-                    .style('stroke', function(d) { return color(d.name); });
+                .attr('class', 'd3-line-circle d3-line-circle-medium')
+                .attr('cx', function (d, i) { return x(d.date) })
+                .attr('cy', function (d, i) { return y(d.value) })
+                .attr('r', 3)
+                .style('stroke', function (d) { return color(d.name); });
 
             // Add transition
             circles
                 .style('opacity', 0)
                 .transition()
-                    .duration(500)
-                    .delay(500)
-                    .style('opacity', 1);
+                .duration(500)
+                .delay(500)
+                .style('opacity', 1);
 
 
 
@@ -273,7 +273,7 @@ var _AppSalesLinesChart = function(element, height) {
 
             // Change tooltip direction of first point
             // to always keep it inside chart, useful on mobiles
-            lines.each(function (d) { 
+            lines.each(function (d) {
                 d3.select(d3.select(this).selectAll('circle')[0][0])
                     .on('mouseover', function (d) {
                         tooltip.offset([0, 15]).direction('e').show(d);
@@ -291,7 +291,7 @@ var _AppSalesLinesChart = function(element, height) {
 
             // Change tooltip direction of last point
             // to always keep it inside chart, useful on mobiles
-            lines.each(function (d) { 
+            lines.each(function (d) {
                 d3.select(d3.select(this).selectAll('circle')[0][d3.select(this).selectAll('circle').size() - 1])
                     .on('mouseover', function (d) {
                         tooltip.offset([0, -15]).direction('w').show(d);
@@ -314,20 +314,20 @@ var _AppSalesLinesChart = function(element, height) {
 
             // Set variable for updating visualization
             var lineUpdate = d3.transition(lines);
-            
+
             // Update lines
             lineUpdate.select('path')
-                .attr('d', function(d, i) { return line(d.values); });
+                .attr('d', function (d, i) { return line(d.values); });
 
             // Update circles
             lineUpdate.selectAll('circle')
-                .attr('cy',function(d,i){return y(d.value)})
-                .attr('cx', function(d,i){return x(d.date)});
+                .attr('cy', function (d, i) { return y(d.value) })
+                .attr('cx', function (d, i) { return x(d.date) });
 
             // Update vertical axes
             d3.transition(svg)
                 .select('.d3-axis-vertical')
-                .call(yAxis);   
+                .call(yAxis);
 
             // Update horizontal axes
             d3.transition(svg)
@@ -380,27 +380,27 @@ var _AppSalesLinesChart = function(element, height) {
                 svg.select('.d3-axis-horizontal').call(xAxis);
 
                 // Vertical axis
-                svg.select('.d3-axis-vertical').call(yAxis.tickSize(0-width));
+                svg.select('.d3-axis-vertical').call(yAxis.tickSize(0 - width));
 
                 // Lines
-                svg.selectAll('.d3-line').attr('d', function(d, i) { return line(d.values); });
+                svg.selectAll('.d3-line').attr('d', function (d, i) { return line(d.values); });
 
                 // Circles
-                svg.selectAll('.d3-line-circle').attr('cx', function(d,i){return x(d.date)})
+                svg.selectAll('.d3-line-circle').attr('cx', function (d, i) { return x(d.date) })
             }
         }
     }
 };
 
 // Daily revenue line chart
-var _DailyRevenueLineChart = function(element, height) {
+var _DailyRevenueLineChart = function (element, height) {
     if (typeof d3 == 'undefined') {
         console.warn('Warning - d3.min.js is not loaded.');
         return;
     }
 
     // Initialize chart only if element exsists in the DOM
-    if($(element).length > 0) {
+    if ($(element).length > 0) {
 
 
         // Basic setup
@@ -434,7 +434,7 @@ var _DailyRevenueLineChart = function(element, height) {
 
         // Main variables
         var d3Container = d3.select(element),
-            margin = {top: 0, right: 0, bottom: 0, left: 0},
+            margin = { top: 0, right: 0, bottom: 0, left: 0 },
             width = d3Container.node().getBoundingClientRect().width - margin.left - margin.right,
             height = height - margin.top - margin.bottom,
             padding = 20;
@@ -458,8 +458,8 @@ var _DailyRevenueLineChart = function(element, height) {
                 return '<ul class="list-unstyled mb-1">' +
                     '<li>' + '<div class="font-size-base my-1"><i class="icon-check2 mr-2"></i>' + formatDate(d.date) + '</div>' + '</li>' +
                     '<li>' + 'Sales: &nbsp;' + '<span class="font-weight-semibold float-right">' + d.alpha + '</span>' + '</li>' +
-                    '<li>' + 'Revenue: &nbsp; ' + '<span class="font-weight-semibold float-right">' + '$' + (d.alpha * 25).toFixed(2) + '</span>' + '</li>' + 
-                '</ul>';
+                    '<li>' + 'Revenue: &nbsp; ' + '<span class="font-weight-semibold float-right">' + '$' + (d.alpha * 25).toFixed(2) + '</span>' + '</li>' +
+                    '</ul>';
             });
 
 
@@ -472,11 +472,11 @@ var _DailyRevenueLineChart = function(element, height) {
 
         // Add SVG group
         var svg = container
-                .attr('width', width + margin.left + margin.right)
-                .attr('height', height + margin.top + margin.bottom)
-                .append('g')
-                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-                    .call(tooltip);
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+            .call(tooltip);
 
 
 
@@ -523,10 +523,10 @@ var _DailyRevenueLineChart = function(element, height) {
 
         // Line
         var line = d3.svg.line()
-            .x(function(d) {
+            .x(function (d) {
                 return x(d.date);
             })
-            .y(function(d) {
+            .y(function (d) {
                 return y(d.alpha)
             });
 
@@ -552,10 +552,10 @@ var _DailyRevenueLineChart = function(element, height) {
 
         // Animate mask
         clipRect
-              .transition()
-                  .duration(1000)
-                  .ease('linear')
-                  .attr('width', width);
+            .transition()
+            .duration(1000)
+            .ease('linear')
+            .attr('width', width);
 
 
 
@@ -574,8 +574,8 @@ var _DailyRevenueLineChart = function(element, height) {
         // Animate path
         svg.select('.line-tickets')
             .transition()
-                .duration(1000)
-                .ease('linear');
+            .duration(1000)
+            .ease('linear');
 
 
 
@@ -591,31 +591,31 @@ var _DailyRevenueLineChart = function(element, height) {
         guide
             .enter()
             .append('line')
-                .attr('class', 'd3-line-guides')
-                .attr('x1', function (d, i) {
-                    return x(d.date);
-                })
-                .attr('y1', function (d, i) {
-                    return height;
-                })
-                .attr('x2', function (d, i) {
-                    return x(d.date);
-                })
-                .attr('y2', function (d, i) {
-                    return height;
-                })
-                .style('stroke', guideColor)
-                .style('stroke-dasharray', '4,2')
-                .style('shape-rendering', 'crispEdges');
+            .attr('class', 'd3-line-guides')
+            .attr('x1', function (d, i) {
+                return x(d.date);
+            })
+            .attr('y1', function (d, i) {
+                return height;
+            })
+            .attr('x2', function (d, i) {
+                return x(d.date);
+            })
+            .attr('y2', function (d, i) {
+                return height;
+            })
+            .style('stroke', guideColor)
+            .style('stroke-dasharray', '4,2')
+            .style('shape-rendering', 'crispEdges');
 
         // Animate guide lines
         guide
             .transition()
-                .duration(1000)
-                .delay(function(d, i) { return i * 150; })
-                .attr('y2', function (d, i) {
-                    return y(d.alpha);
-                });
+            .duration(1000)
+            .delay(function (d, i) { return i * 150; })
+            .attr('y2', function (d, i) {
+                return y(d.alpha);
+            });
 
 
 
@@ -628,12 +628,12 @@ var _DailyRevenueLineChart = function(element, height) {
             .data(dataset)
             .enter()
             .append('circle')
-                .attr('class', 'd3-line-circle d3-line-circle-medium')
-                .attr('cx', line.x())
-                .attr('cy', line.y())
-                .attr('r', 3)
-                .style('stroke', lineColor)
-                .style('fill', lineColor);
+            .attr('class', 'd3-line-circle d3-line-circle-medium')
+            .attr('cx', line.x())
+            .attr('cy', line.y())
+            .attr('r', 3)
+            .style('stroke', lineColor)
+            .style('fill', lineColor);
 
 
 
@@ -641,10 +641,10 @@ var _DailyRevenueLineChart = function(element, height) {
         points
             .style('opacity', 0)
             .transition()
-                .duration(250)
-                .ease('linear')
-                .delay(1000)
-                .style('opacity', 1);
+            .duration(250)
+            .ease('linear')
+            .delay(1000)
+            .style('opacity', 1);
 
 
         // Add user interaction
@@ -761,7 +761,7 @@ var _DailyRevenueLineChart = function(element, height) {
 //
 
 // Basic line chart
-var _linesBasicLightExample = function(elemento, legenda, valores) {
+var _linesBasicLightExample = function (elemento, legenda, valores) {
     if (typeof echarts == 'undefined') {
         console.warn('Warning - echarts.min.js is not loaded.');
         return;
@@ -769,7 +769,7 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
 
     // Define element
     var line_basic_element = document.getElementById(elemento);
-    
+
 
     //
     // Charts configuration
@@ -779,7 +779,7 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
 
         // Initialize chart
         var line_basic = echarts.init(line_basic_element);
-        
+
 
         //
         // Chart config
@@ -810,11 +810,11 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
             },
 
             // Add legend
-           // legend: {
-           //     data: [legenda],
-           //     itemHeight: 8,
-           //     itemGap: 20
-           // },
+            // legend: {
+            //     data: [legenda],
+            //     itemHeight: 8,
+            //     itemGap: 20
+            // },
 
             // Add tooltip
             tooltip: {
@@ -825,11 +825,11 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
                     fontSize: 13,
                     fontFamily: 'Roboto, sans-serif'
                 },
-                formatter: function(params) {
-					const param = params[0];
-					
-					return "Data: "+param.value[0] + "<br>"+param.seriesName+": " + param.value[1]
-				}
+                formatter: function (params) {
+                    const param = params[0];
+
+                    return "Data: " + param.value[0] + "<br>" + param.seriesName + ": " + param.value[1]
+                }
             },
 
             // Horizontal axis
@@ -850,7 +850,7 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
                     }
                 },
                 axisLabel: {
-                    formatter: (function(value){
+                    formatter: (function (value) {
                         return moment(value).format('D/M/Y');
                     })
                 }
@@ -873,9 +873,9 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
                         color: ['#eee']
                     }
                 },
-                splitArea: {
+                splitbarra: {
                     show: true,
-                    areaStyle: {
+                    barraStyle: {
                         color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
                     }
                 }
@@ -890,8 +890,8 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
                     smooth: true,
                     symbolSize: 0,
                     //
-                   // markLine: {
-                   //     data: [{
+                    // markLine: {
+                    //     data: [{
                     //        type: 'average',
                     //        name: 'Average'
                     //    }]
@@ -918,7 +918,7 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
     //
 
     // Resize function
-    var triggerChartResize = function() {
+    var triggerChartResize = function () {
         line_basic_element && line_basic.resize();
     };
 
@@ -928,7 +928,7 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
 
     // On window resize
     var resizeCharts;
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         clearTimeout(resizeCharts);
         resizeCharts = setTimeout(function () {
             triggerChartResize();
@@ -937,7 +937,7 @@ var _linesBasicLightExample = function(elemento, legenda, valores) {
 };
 
 
-var _area = function(elemento, legenda, valores) {
+var _barra = function (elemento, legenda, valores) {
     if (typeof echarts == 'undefined') {
         console.warn('Warning - echarts.min.js is not loaded.');
         return;
@@ -945,7 +945,7 @@ var _area = function(elemento, legenda, valores) {
 
     // Define element
     var line_basic_element = document.getElementById(elemento);
-    
+
 
     //
     // Charts configuration
@@ -955,7 +955,7 @@ var _area = function(elemento, legenda, valores) {
 
         // Initialize chart
         var line_basic = echarts.init(line_basic_element);
-        
+
 
         //
         // Chart config
@@ -986,11 +986,11 @@ var _area = function(elemento, legenda, valores) {
             },
 
             // Add legend
-           // legend: {
-           //     data: [legenda],
-           //     itemHeight: 8,
-           //     itemGap: 20
-           // },
+            // legend: {
+            //     data: [legenda],
+            //     itemHeight: 8,
+            //     itemGap: 20
+            // },
 
             // Add tooltip
             tooltip: {
@@ -1001,10 +1001,10 @@ var _area = function(elemento, legenda, valores) {
                     fontSize: 13,
                     fontFamily: 'Roboto, sans-serif'
                 },
-                formatter: function(params) {
-					const param = params[0];					
-					return "Data: "+param.value[0] + "<br>"+param.seriesName+": " + param.value[1]
-				}
+                formatter: function (params) {
+                    const param = params[0];
+                    return "Data: " + param.value[0] + "<br>" + param.seriesName + ": " + param.value[1]
+                }
             },
 
             // Horizontal axis
@@ -1025,7 +1025,7 @@ var _area = function(elemento, legenda, valores) {
                     }
                 },
                 axisLabel: {
-                    formatter: (function(value){
+                    formatter: (function (value) {
                         return moment(value).format('D/M/Y');
                     })
                 }
@@ -1049,9 +1049,9 @@ var _area = function(elemento, legenda, valores) {
                         color: ['#eee']
                     }
                 },
-                splitArea: {
+                splitbarra: {
                     show: true,
-                    areaStyle: {
+                    barraStyle: {
                         color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
                     }
                 }
@@ -1065,14 +1065,14 @@ var _area = function(elemento, legenda, valores) {
                     data: valores,
                     smooth: false,
                     symbolSize: 0,
-                    areaStyle: {
+                    barraStyle: {
                         normal: {
                             opacity: 1
                         }
                     },
                     //
-                   // markLine: {
-                   //     data: [{
+                    // markLine: {
+                    //     data: [{
                     //        type: 'average',
                     //        name: 'Average'
                     //    }]
@@ -1089,6 +1089,83 @@ var _area = function(elemento, legenda, valores) {
             ]
         });
     }
+}
+var _donut = function (elemento, titulo, valores) {
+    if (typeof echarts == 'undefined') {
+        console.warn('Warning - echarts.min.js is not loaded.');
+        return;
+    }
+
+    // Define element
+    var line_basic_element = document.getElementById(elemento);
+
+
+    //
+    // Charts configuration
+    //
+
+    if (line_basic_element) {
+
+        // Initialize chart
+        var line_basic = echarts.init(line_basic_element);
+
+
+        //
+        // Chart config
+        //
+
+        // Options
+        line_basic.setOption({
+
+            color: ['#29B6F6', '#EF5350'],
+            // Global text styles
+            textStyle: {
+                fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+                fontSize: 13
+            },
+
+            // Chart animation duration
+            animationDuration: 750,
+
+
+
+            // Add legend
+            // legend: {
+            //     data: [legenda],
+            //     itemHeight: 8,
+            //     itemGap: 20
+            // },
+
+            // Add tooltip
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c} ({d}%)',
+                position: 'right'
+            },
+
+            series: [
+                {
+                    name: titulo,
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        }
+
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data: valores
+                }
+            ]
+        });
+    }
 
 
     //
@@ -1096,7 +1173,7 @@ var _area = function(elemento, legenda, valores) {
     //
 
     // Resize function
-    var triggerChartResize = function() {
+    var triggerChartResize = function () {
         line_basic_element && line_basic.resize();
     };
 
@@ -1106,7 +1183,7 @@ var _area = function(elemento, legenda, valores) {
 
     // On window resize
     var resizeCharts;
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         clearTimeout(resizeCharts);
         resizeCharts = setTimeout(function () {
             triggerChartResize();
@@ -1114,9 +1191,303 @@ var _area = function(elemento, legenda, valores) {
     });
 };
 
+var _barra_horizontal = function (elemento, legenda, valores) {
+    if (typeof echarts == 'undefined') {
+        console.warn('Warning - echarts.min.js is not loaded.');
+        return;
+    }
+    
+
+    // Define element
+    var line_basic_element = document.getElementById(elemento);
 
 
-document.addEventListener('DOMContentLoaded', function() {
+    //
+    // Charts configuration
+    //
+
+    if (line_basic_element) {
+
+        // Initialize chart
+        var line_basic = echarts.init(line_basic_element);
+
+
+        //
+        // Chart config
+        //
+
+        // Options
+        line_basic.setOption({
+
+            // Define colors
+            color: ['#2cc7c8', '#66BB6A'],
+
+            // Global text styles
+            textStyle: {
+                fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+                fontSize: 13
+            },
+
+            // Chart animation duration
+            animationDuration: 750,
+
+            // Setup grid
+            grid: {
+                left: 50,
+                right: 40,
+                top: 0,
+                bottom: 0,
+                containLabel: false
+            },
+
+            // Add legend
+            // legend: {
+            //     data: [legenda],
+            //     itemHeight: 8,
+            //     itemGap: 20
+            // },
+
+            // Add tooltip
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0,0,0,0.75)',
+                padding: [10, 15],
+                textStyle: {
+                    fontSize: 13,
+                    fontFamily: 'Roboto, sans-serif'
+                },
+                formatter: '{b}: {c}%',
+            },
+
+            // Horizontal axis
+            xAxis: [{
+                type: 'value',
+                boundaryGap: false,
+                axisLabel: {
+                    color: '#333'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#999'
+                    }
+                },
+                splitLine: { show: false }, // separator line in the grid area
+                axisLabel: { show: false }, // axis coordinate label
+                axisTick: { show: false }, // axis scale
+                axisLine: { show: false }, // axis axis,
+            }],
+
+            // Vertical axis
+            yAxis: [{
+                show: false,
+                type: 'category',
+                axisLabel: {
+                    formatter: '{value}',
+                    color: '#333'
+                },
+                
+                splitLine: {
+                    lineStyle: {
+                        color: ['#eee']
+                    }
+                },
+                splitbarra: {
+                    show: true,
+                    barraStyle: {
+                        color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
+                    }
+                },
+                axisTick: { show: false },
+                axisLine: { show: false }
+            }],
+
+            // Add series
+            series: [
+                {
+                    name: legenda,
+                    type: 'bar',
+                    data: valores,
+                    smooth: false,
+                    barWidth: 19,
+                    //
+                    // markLine: {
+                    //     data: [{
+                    //        type: 'average',
+                    //        name: 'Average'
+                    //    }]
+                    //},
+                    itemStyle: {
+                        normal: {
+                            borderWidth: 1,
+                            barBorderRadius: [0,10,10,0],
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top', 
+                        formatter: '{b}: {c}%', 
+                        fontSize: 20
+                    },                
+                }
+            ]
+        });
+    }
+};
+
+var _ProgressRoundedChart = function(element, radius, border, color, end, iconClass, textTitle, textAverage) {
+    if (typeof d3 == 'undefined') {
+        console.warn('Warning - d3.min.js is not loaded.');
+        return;
+    }
+
+    // Initialize chart only if element exsists in the DOM
+    if($(element).length > 0) {
+
+
+        // Basic setup
+        // ------------------------------
+
+        // Main variables
+        var d3Container = d3.select(element),
+            startPercent = 0,
+            iconSize = 32,
+            endPercent = end,
+            twoPi = Math.PI * 2,
+            formatPercent = d3.format('.0%'),
+            boxSize = radius * 2;
+
+        // Values count
+        var count = Math.abs((endPercent - startPercent) / 0.01);
+
+        // Values step
+        var step = endPercent < startPercent ? -0.01 : 0.01;
+
+
+
+        // Create chart
+        // ------------------------------
+
+        // Add SVG element
+        var container = d3Container.append('svg');
+
+        // Add SVG group
+        var svg = container
+            .attr('width', boxSize)
+            .attr('height', boxSize)
+            .append('g')
+                .attr('transform', 'translate(' + (boxSize / 2) + ',' + (boxSize / 2) + ')');
+
+
+
+        // Construct chart layout
+        // ------------------------------
+
+        // Arc
+        var arc = d3.svg.arc()
+            .startAngle(0)
+            .innerRadius(radius)
+            .outerRadius(radius - border);
+
+
+
+        //
+        // Append chart elements
+        //
+
+        // Paths
+        // ------------------------------
+
+        // Background path
+        svg.append('path')
+            .attr('class', 'd3-progress-background')
+            .attr('d', arc.endAngle(twoPi))
+            .style('fill', color)
+            .style('opacity', 0.1);
+
+        // Foreground path
+        var foreground = svg.append('path')
+            .attr('class', 'd3-progress-foreground')
+            .attr('filter', 'url(#blur)')
+            .style('fill', color)
+            .style('stroke', color);
+
+        // Front path
+        var front = svg.append('path')
+            .attr('class', 'd3-progress-front')
+            .style('fill', color)
+            .style('fill-opacity', 1);
+
+
+
+        // Text
+        // ------------------------------
+        
+        
+        // Percentage text value
+        var numberText = d3.select(element)
+        .append('h2')
+            .attr('class', 'pt-1 mt-2 mb-1')
+        
+        
+
+        // Icon
+        d3.select(element)
+            .append('i')
+                .attr('class', iconClass + ' counter-icon')
+                .attr('style', 'top: ' + ((boxSize - iconSize) / 2) + 'px');
+
+        
+        // Title
+        d3.select(element)
+            .append('div')
+                .text(textTitle);
+
+        // Subtitle
+        d3.select(element)
+            .append('div')
+                .attr('class', 'font-size-sm text-muted mb-3')
+                .text(textAverage);
+
+
+
+        // Animation
+        // ------------------------------
+
+        if (end<1){
+            // Animate path
+            function updateProgress(progress) {
+                foreground.attr('d', arc.endAngle(twoPi * progress));
+                front.attr('d', arc.endAngle(twoPi * progress));
+                numberText.text(formatPercent(progress));
+            }
+        };
+        if (end==1){
+            // Animate path
+            function updateProgress(progress) {
+                foreground.attr('d', arc.endAngle(twoPi * progress));
+                front.attr('d', arc.endAngle(twoPi * progress));
+                numberText.text('');
+            }
+        };
+        
+        
+
+        // Animate text
+        var progress = startPercent;
+        (function loops() {
+            updateProgress(progress);
+            if (count > 0) {
+                count--;
+                progress += step;
+                setTimeout(loops, 10);
+            }
+        })();
+    }
+};
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
     if ('{{grafico}}'=='linhas_coloridas'){
         _AppSalesLinesChart('#{{componente}}', 255);
     };
@@ -1124,11 +1495,21 @@ document.addEventListener('DOMContentLoaded', function() {
         _DailyRevenueLineChart('#{{componente}}', 50);
     };
     if ('{{grafico}}'=='basico'){
-        _linesBasicLightExample('{{componente}}', {{ legenda|default:"'Valores'" }},{{valores}} );
+        _linesBasicLightExample('{{componente}}', {{ legenda_basico|default:"'Valores'" }},{{valores_basico|default:"null"}} );
     };
-    if ('{{grafico}}'=='area'){
-        _area('{{componente}}', {{ legenda|default:"'Valores'" }},{{valores}} );
+    if ('{{grafico}}'=='barra'){
+        _barra('{{componente}}', {{ legenda_barra|default:"'Valores'" }},{{valores_barra|default:"null"}} );
     };
+    if ('{{grafico}}'=='donut'){
+        _donut('{{componente}}', {{ titulo_Donut|default:"null" }},{{valores_donut|default:"null"}} );
+    };
+    if ('{{grafico}}'=='barra_horizontal'){
+        _barra_horizontal('{{componente}}',{{ legenda_barra|default:"'Valores'" }},{{valores_barra|default:"null"}}  );
+    };
+    if ('{{grafico}}'=='progresso'){
+        _ProgressRoundedChart('#{{componente}}', {{raio|default:"null"}}, 2, '{{cor|default:"null"}}', {{progresso|default:"null"}}, '{{icone|default:"null"}}', '{{titulo|default:"null"}}', '{{subtitulo|default:"null"}}');
+    };
+    
     
 
     

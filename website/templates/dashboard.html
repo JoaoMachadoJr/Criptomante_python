@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Criptomante - Dashboard</title>
+
+	<!-- Global stylesheets -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/icons/icomoon/styles.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap_limitless.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/layout.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/components.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/colors.min.css' %}" rel="stylesheet" type="text/css">
+	<!-- /global stylesheets -->
+
+	<!-- Core JS files -->
+	<script src="{% static 'js/main/jquery.min.js' %}"></script>
+	<script src="{% static 'js/main/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'js/plugins/loaders/blockui.min.js' %}"></script>
+	<script src="{% static 'js/plugins/visualization/echarts/echarts.min.js' %}"></script>
+	<!-- /core JS files -->
+
+	<!-- Theme JS files -->
+	<script src="{% static 'js/plugins/visualization/d3/d3.min.js' %}"></script>
+	<script src="{% static 'js/plugins/visualization/d3/d3_tooltip.js' %}"></script>
+	<script src="{% static 'js/plugins/forms/styling/switchery.min.js' %}"></script>
+	<script src="{% static 'js/plugins/ui/moment/moment.min.js' %}"></script>
+	<script src="{% static 'js/plugins/pickers/daterangepicker.js' %}"></script>
+
+	<script src="{% static 'assets/js/app.js' %}"></script>
+	<script src="{% static 'js/demo_pages/dashboard.js' %}"></script>
+	<script src="{% static 'js/demo_charts/pages/dashboard/light/streamgraph.js' %}"></script>
+	<script src="{% static 'js/demo_charts/pages/dashboard/light/sparklines.js' %}"></script>
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="analise_consolidada" grafico="basico" legenda_basico="'Valor'" valores_basico=previsao_numerica %} 
+	</script>
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="analise_consolidada_transacoes" grafico="barra" legenda_barra="'Transações'" valores_barra=transacoes %} 
+	</script>
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="donut_comentarios" grafico="donut" valores_donut=valores_donut_comentarios titulo_Donut="'Frases'" %} 
+	</script>
+
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="analise_semantica_resultado" grafico="progresso" progresso="1" icone=analise_semantica_resultado_icone raio="50" cor=analise_semantica_resultado_cor titulo=analise_semantica_resultado_titulo subtitulo=analise_semantica_resultado_subtitulo %} 
+	</script>
+
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="analise_semantica_precisao" grafico="progresso" progresso=analise_semantica_precisao icone="icon-target2" raio="50" cor="#29B6F6" titulo="Precisão" subtitulo="Precisão da Análise Semântica" %} 
+	</script>
+
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="analise_semantica_v_positivo" grafico="progresso" progresso=analise_semantica_v_positivo icone="icon-stats-growth" raio="25" cor="#29B6F6" titulo="Verdadeiros Positivos" subtitulo="Projeções corretas de aumento" %} 
+	</script>
+
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="analise_semantica_f_positivo" grafico="progresso" progresso=analise_semantica_f_positivo icone="icon-stats-growth" raio="25" cor="#EF5350" titulo="Falsos positivos" subtitulo="Projeções incorretas de aumento" %} 
+	</script>
+
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="analise_semantica_v_negativo" grafico="progresso" progresso=analise_semantica_v_negativo icone="icon-stats-decline" raio="25" cor="#29B6F6" titulo="Verdadeiros Negativos" subtitulo="Projeções corretas de queda" %} 
+	</script>
+
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="analise_semantica_f_negativo" grafico="progresso" progresso=analise_semantica_f_negativo icone="icon-stats-decline" raio="25" cor="#EF5350" titulo="Falsos Negativos" subtitulo="Projeções incorretas de queda" %} 
+	</script>
+
+	
+
+</head>
+
+<body>
+
+	<!-- Main navbar -->
+	{% include "barra_superior.html" %}   
+	<!-- /main navbar -->
+
+
+	<!-- Page content -->
+	<div class="page-content">
+
+		<!-- Main sidebar -->
+
+		<!-- /Main sidebar -->
+		{% include "barra_lateral.html" %}
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			<!-- Page header -->
+			<div class="page-header page-header-light">
+				<div class="page-header-content header-elements-md-inline">
+					<div class="page-title d-flex">
+						<h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Principal</span> - Dashboard</h4>
+						<a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+					</div>
+					
+				</div>
+				
+			</div>
+			<!-- /page header -->
+
+
+			<!-- Content barra -->
+			<div class="content">
+
+				<!-- Main charts -->
+				<div class="row">
+					<div class="col-xl">
+
+						<!-- Sales stats -->
+						<div class="card">
+							<div class="card-header header-elements-inline">
+								<h5 class="card-title">Consolidação das três análises - Estimativa de valor futuro do Bitcoin</h5>
+								<a href="#" class="btn bg-indigo-300"><i class="icon-statistics mr-2"></i> Explicação da análise de padrões numéricos</a>
+							</div>
+
+							<div class="card-body py-0">
+								<div class="row text-center">
+									<div class="col-4">
+										<div class="mb-3">
+											<h5 class="font-weight-semibold mb-0">21.016.129</h5>
+											<span class="text-muted font-size-sm">Transações analisadas</span>
+										</div>
+									</div>
+
+									<div class="col-4">
+										<div class="mb-3">
+											<h5 class="font-weight-semibold mb-0">8.518.628</h5>
+											<span class="text-muted font-size-sm">Mensagens analisadas</span>
+										</div>
+									</div>
+
+									<div class="col-4">
+										<div class="mb-3">
+											<h5 class="font-weight-semibold mb-0">24.566.188</h5>
+											<span class="text-muted font-size-sm">Frases analisadas</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="chart-container">
+									<div class="chart has-fixed-height" id="analise_consolidada"></div>
+								</div>
+								<div class="chart-container">
+									<div class="chart has-half-fixed-height"  id="analise_consolidada_transacoes"></div>
+								</div>
+							</div>
+					
+							
+						</div>
+						<!-- /sales stats -->
+
+					</div>
+					
+				</div>
+				
+
+
+				<!-- Dashboard content -->
+				<div class="row">
+					<div class="col-xl-7">
+
+						<!-- Marketing campaigns -->
+						<div class="card">
+							<div class="card-header header-elements-sm-inline">
+								<h6 class="card-title">Frases recentes que mostraram tendência de aumento/queda</h6>
+								<a href="#" class="btn bg-indigo-300"><i class="icon-statistics mr-2"></i> Explicação da análise</a>
+							</div>
+							<div class="card-body d-sm-flex align-items-sm-center justify-content-sm-between flex-sm-wrap">
+								<div class="d-flex align-items-center mb-3 mb-sm-0">
+									<div class="chart chart-donut"  id="donut_comentarios"></div>
+									<div class="ml-3">
+										<h5 class="font-weight-semibold mb-0">{{qnt_frases_recentes}} <span class="text-success font-size-sm font-weight-normal"><br> 
+										<span class="text-muted">Frases recentes com tendência</span>
+									</div>
+								</div>
+
+							
+								<div>
+									
+								</div>
+							</div>
+							{% include "tabela.html" with categorias=header_comentarios_recentes dados=comentarios_recentes%}
+						<!-- /marketing campaigns -->
+						</div>
+
+
+						
+					</div>
+
+					<div class="col-xl-5">
+
+						
+
+
+						<!-- Daily sales -->
+						<div class="card">
+							<div class="card-header header-elements-inline">
+								<h6 class="card-title">Análise Semântica de Comentários</h6>
+								<a href="#" class="btn bg-indigo-300"><i class="icon-statistics mr-2"></i> Explicação da análise</a>
+							</div>
+
+							
+
+								<!-- Available hours -->
+								<div class="card text-center">
+									<div class="card-body">
+										<br>
+					                	<!-- Progress counter -->
+										<div class="svg-center position-relative" id="analise_semantica_resultado"></div>
+										<!-- /progress counter -->
+
+									</div>
+								</div>
+								<!-- /available hours -->
+
+								<!-- Available hours -->
+								<div class="card text-center">
+									<div class="card-body">
+
+					                	<!-- Progress counter -->
+										<div class="svg-center position-relative" id="analise_semantica_precisao"></div>
+										<!-- /progress counter -->
+
+									</div>
+								</div>
+								<!-- /available hours -->								
+							
+							<!-- Progress counters -->
+						<div class="row">
+							<div class="col-sm-6">
+
+								<!-- Available hours -->
+								<div class="card text-center">
+									<div class="card-body">
+
+					                	<!-- Progress counter -->
+										<div class="svg-center position-relative" id="analise_semantica_v_positivo"></div>
+										<!-- /progress counter -->
+
+									</div>
+								</div>
+								<!-- /available hours -->
+
+							</div>
+
+							<div class="col-sm-6">
+
+								<!-- Available hours -->
+								<div class="card text-center">
+									<div class="card-body">
+
+					                	<!-- Progress counter -->
+										<div class="svg-center position-relative" id="analise_semantica_f_positivo"></div>
+										<!-- /progress counter -->
+
+									</div>
+								</div>
+								<!-- /available hours -->
+
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-6">
+
+								<!-- Available hours -->
+								<div class="card text-center">
+									<div class="card-body">
+
+					                	<!-- Progress counter -->
+										<div class="svg-center position-relative" id="analise_semantica_v_negativo"></div>
+										<!-- /progress counter -->
+
+									</div>
+								</div>
+								<!-- /available hours -->
+
+							</div>
+
+							<div class="col-sm-6">
+
+								<!-- Available hours -->
+								<div class="card text-center">
+									<div class="card-body">
+
+					                	<!-- Progress counter -->
+										<div class="svg-center position-relative" id="analise_semantica_f_negativo"></div>
+										<!-- /progress counter -->
+
+									</div>
+								</div>
+								<!-- /available hours -->
+
+							</div>
+						</div>
+						
+						
+					</div>
+				</div>
+				<!-- /dashboard content -->
+
+			</div>
+			<!-- /content barra -->
+
+
+			<!-- Footer -->
+			<!-- Main navbar -->
+			{% include "footer.html" %}   
+			<!-- /main navbar -->
+			<!-- /footer -->
+
+		</div>
+		<!-- /main content -->
+
+	</div>
+	<!-- /page content -->
+
+</body>
+</html>

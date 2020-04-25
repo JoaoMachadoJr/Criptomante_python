@@ -39,8 +39,8 @@ class AbstractCrawler(ABC):
                     postagem.website = self.website
                 repositorio.inserePostagens(postagens)
                 proxima = self.obtemProximaPagina(self.html)
-                if proxima!=None:
-                    self.url=proxima
+                self.url=proxima
+                    
             except Exception as e:
                 print(str(e))
             

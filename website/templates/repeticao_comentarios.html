@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Criptomante - Análise por repetição de comentários</title>
+
+	<!-- Global stylesheets -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/icons/icomoon/styles.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap_limitless.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/layout.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/components.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/colors.min.css' %}" rel="stylesheet" type="text/css">
+	<!-- /global stylesheets -->
+
+	<!-- Core JS files -->
+	<script src="{% static 'js/main/jquery.min.js' %}"></script>
+	<script src="{% static 'js/main/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'js/plugins/loaders/blockui.min.js' %}"></script>
+	<script src="{% static 'js/plugins/visualization/echarts/echarts.min.js' %}"></script>
+	<!-- /core JS files -->
+
+	<!-- Theme JS files -->
+	<script src="{% static 'js/plugins/visualization/d3/d3.min.js' %}"></script>
+	<script src="{% static 'js/plugins/visualization/d3/d3_tooltip.js' %}"></script>
+	<script src="{% static 'js/plugins/forms/styling/switchery.min.js' %}"></script>
+	<script src="{% static 'js/plugins/ui/moment/moment.min.js' %}"></script>
+	<script src="{% static 'js/plugins/pickers/daterangepicker.js' %}"></script>
+
+	<script src="{% static 'assets/js/app.js' %}"></script>
+	<script src="{% static 'js/demo_pages/dashboard.js' %}"></script>
+	<script src="{% static 'js/demo_charts/pages/dashboard/light/streamgraph.js' %}"></script>
+	<script src="{% static 'js/demo_charts/pages/dashboard/light/sparklines.js' %}"></script>
+	
+
+	
+
+</head>
+
+<body>
+
+	<!-- Main navbar -->
+	{% include "barra_superior.html" %}   
+	<!-- /main navbar -->
+
+
+	<!-- Page content -->
+	<div class="page-content">
+
+		<!-- Main sidebar -->
+
+		<!-- /Main sidebar -->
+		{% include "barra_lateral.html" %}
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			<!-- Page header -->
+			<div class="page-header page-header-light">
+				<div class="page-header-content header-elements-md-inline">
+					<div class="page-title d-flex">
+						<h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Metodologia</span> - Análise por repetição de comentários</h4>
+						<a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+					</div>
+					
+				</div>
+				
+			</div>
+			<!-- /page header -->
+			<div class="content">
+				<div class="card">
+					<div class="card-header header-elements-inline">
+						<h5 class="card-title">Análise por repetição de comentários</h5>
+					</div>
+					<div class="card-body">
+						<p>A Fazer: Desenvolver os seguintes argumentos/informações</p>
+						<ul><li>Começar resumindo a análise, do inicio ao fim, de forma superficial.</li>
+							<li>A idéia geral da análise é essa: Observe a comunidade com maior volume de conversação sobre bitcoin, que é o Reddit. Então verifique o que está sendo dito hoje, compare com outras vezes em que a mesma coisa foi dita. Verifique se, das outras vezes, esses comentários precederam aumento ou queda no valor do bitcoin</li>
+							<li>Começar então a desenvolver de forma detalhada, desde o inicio</li>
+							<li>1- Listamos as mensagens trocadas nas últimas 24h</li>
+							<li>2- Para cada mensagem de usuário, separamos em Frases. A separação é feita usando um motor de processamento de linguagem natural para o idioma inglês. Aqui falamos sobre esse motor, um dos mais avançados do mundo, chamado spaCy</li>
+							<li>3- Realizamos um pré-tratamento, removendo caracteres especiais e links</li>
+							<li>4- Para cada frase, verificamos toda as vezes em que essa frase foi dita. Se a quantidade de vezes que essa frase precedeu um aumento é diferente da quantidade de vezes em que essa frase precedeu uma queda, então consideramos que é uma Frase que possui Tendencia. Obs: Aumentos e Quedas devem ser de pelo menos 5% em 24h para serem condirados</li>
+							<li>5- Calculamos a média de variação do preço de bitcoin de todas as frases com tendencia encontradas no passo 4.</li>
+							<li>6- Calculamos a média das médias encontradas no passo 5. Sendo esse valor nosso resultado da análise, e será então aplicado ao valor duturo do bitcoin na Análise Consolidada, no Dashboard</li>
+							<li>Listar mensagens  ditas nas ultimas 24h. Passo 1</li>
+							<li>Exibir frases obtidas pelo Spacy. Passo  e 3</li>
+							<li>Exibir outras vezes em que essas frases foram ditas. Informamos se é uma frase com tendencia. Passo 4</li>
+							<li>Exibir calculo de media do passo 5.</li>
+							<li>Exibir calculo de media do passo 6.</li>
+					
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+
+			<!-- Footer -->
+			<!-- Main navbar -->
+			{% include "footer.html" %}   
+			<!-- /main navbar -->
+			<!-- /footer -->
+
+		</div>
+		<!-- /main content -->
+
+	</div>
+	<!-- /page content -->
+
+</body>
+</html>

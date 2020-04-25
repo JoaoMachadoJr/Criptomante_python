@@ -2,6 +2,7 @@ from typing import List
 from django.db import connections, transaction, connection
 from criptomante.util.cursor_util import CursorUtil
 from enum import Enum
+import numpy
 
 class AbstractRepository:
 
@@ -61,5 +62,6 @@ class AbstractRepository:
         sql2, params2 = SQLParams('named', 'format').format(sql, params)
         params2 = [elem.value if isinstance(
             elem, Enum) else elem for elem in params2]
+        params2 = [int(elem) if isinstance(elem, numpy.int64) else elem for elem in params2]
         cursor.execute(sql2, params2)
         return cursor

@@ -30,9 +30,9 @@ class CrawlerPlataformas:
         CAMINHO_ARQUIVO_COMPACTADO = CAMINHO_ARQUIVO+".gz"        
 
         #Download do arquivo CSV
-        #Browser.download(URL_API,CAMINHO_ARQUIVO_COMPACTADO)
-        #print("Iniciando descompactacao de arquivo")
-        #self.descompactar_arquivo(CAMINHO_ARQUIVO_COMPACTADO, CAMINHO_ARQUIVO)
+        Browser.download(URL_API,CAMINHO_ARQUIVO_COMPACTADO)
+        print("Iniciando descompactacao de arquivo")
+        self.descompactar_arquivo(CAMINHO_ARQUIVO_COMPACTADO, CAMINHO_ARQUIVO)
 
         #Ler arquivo CSV
         print("Iniciando contagem de linhas")

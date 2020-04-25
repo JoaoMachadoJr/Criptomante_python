@@ -6,8 +6,7 @@ from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 import  en_core_web_sm, en_core_web_lg
-
-
+from sklearn.metrics import confusion_matrix
 
 
 
@@ -29,7 +28,9 @@ def clean_text(text):
     # Removing spaces and converting text into lowercase
     return text.strip().lower()
 
-def realizar_teste(dataframe):
+
+
+def contruir_modelo(dataframe):
     print("Criando vetor")
     tfidf_vector = TfidfVectorizer(tokenizer = tokenizer)
     bow_vector = CountVectorizer(tokenizer = tokenizer)
@@ -55,13 +56,37 @@ def realizar_teste(dataframe):
     # Predicting with a test dataset
     predicted = pipe.predict(X_test)
 
+    
+
     # Model Accuracy
     print("Logistic Regression Accuracy:",metrics.accuracy_score(y_test, predicted))
     print("Logistic Regression Precision:",metrics.precision_score(y_test, predicted))
     print("Logistic Regression Recall:",metrics.recall_score(y_test, predicted))
 
+    saida = dict()
+    saida["modelo"] = pipe
+    saida["Accuracy"]= metrics.accuracy_score(y_test, predicted)
+    saida["Precision"] = metrics.precision_score(y_test, predicted)
+    saida["Recall"] = metrics.recall_score(y_test, predicted)
+    saida["X_train"] = X_train
+    saida["X_test"] = X_test
+    saida["y_train"] = y_train
+    saida["y_test"] = y_test
+    matriz = confusion_matrix(y_test,predicted )
+    saida["TP"] = matriz[1][1]
+    saida["FP"] = matriz[0][1]
+    saida["TN"] = matriz[0][0]
+    saida["FN"] = matriz[1][0]
+
+
+    return saida
+     
 def tokenizer(sentence):
     return sentence.split(" ")
+
+
+
+
     
 
     

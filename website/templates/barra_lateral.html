@@ -45,7 +45,7 @@
                 <!-- Main -->
                 <li class="nav-item-header"><div class="text-uppercase font-size-xs line-height-xs">Principal</div> <i class="icon-menu" title="Main"></i></li>
                 <li class="nav-item">
-                    <a href="/" class="nav-link active">
+                    {% if request.path == "/" %} <a href="/" class="nav-link active"> {% else %} <a href="/" class="nav-link"> {% endif %}
                         <i class="icon-home4"></i>
                         <span>
                             Dashboard
@@ -53,26 +53,10 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/" class="nav-link">
+                    {% if request.path == "/projeto" %} <a href="/projeto" class="nav-link active"> {% else %} <a href="/projeto" class="nav-link"> {% endif %}
                         <i class="icon-book3"></i>
                         <span>
                             Sobre o Projeto
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/" class="nav-link">
-                        <i class="icon-user"></i>
-                        <span>
-                            Sobre mim
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/" class="nav-link">
-                        <i class="icon-vcard"></i>
-                        <span>
-                            Contato
                         </span>
                     </a>
                 </li>
@@ -81,7 +65,7 @@
                 <!-- Forms -->
                 <li class="nav-item-header"><div class="text-uppercase font-size-xs line-height-xs">Metodologia</div> <i class="icon-menu" title="Forms"></i></li>
                 <li class="nav-item">
-                    <a href="/" class="nav-link">
+                    {% if request.path == "/apresentacao" %} <a href="/" class="nav-link active"> {% else %} <a href="/apresentacao" class="nav-link"> {% endif %}
                         <i class="icon-file-presentation"></i>
                         <span>
                             Apresentação
@@ -89,7 +73,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/" class="nav-link">
+                    {% if request.path == "/padroes_numericos" %} <a href="/" class="nav-link active"> {% else %} <a href="/padroes_numericos" class="nav-link"> {% endif %}
                         <i class="icon-stats-growth"></i>
                         <span>
                             Análise de padrões numéricos
@@ -97,7 +81,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/" class="nav-link">
+                    {% if request.path == "/repeticao_comentarios" %} <a href="/" class="nav-link active"> {% else %} <a href="/repeticao_comentarios" class="nav-link"> {% endif %}
                         <i class="icon-stack-text"></i>
                         <span>
                             Análise por repetição de comentários
@@ -105,7 +89,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/" class="nav-link">
+                    {% if request.path == "/analise_semantica" %} <a href="/" class="nav-link active"> {% else %} <a href="/analise_semantica" class="nav-link"> {% endif %}
                         <i class="icon-theater"></i>
                         <span>
                             Análise semântica de comentários

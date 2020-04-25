@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Criptomante - Análise semântica de comentários</title>
+
+	<!-- Global stylesheets -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/icons/icomoon/styles.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap_limitless.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/layout.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/components.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/colors.min.css' %}" rel="stylesheet" type="text/css">
+	<!-- /global stylesheets -->
+
+	<!-- Core JS files -->
+	<script src="{% static 'js/main/jquery.min.js' %}"></script>
+	<script src="{% static 'js/main/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'js/plugins/loaders/blockui.min.js' %}"></script>
+	<script src="{% static 'js/plugins/visualization/echarts/echarts.min.js' %}"></script>
+	<!-- /core JS files -->
+
+	<!-- Theme JS files -->
+	<script src="{% static 'js/plugins/visualization/d3/d3.min.js' %}"></script>
+	<script src="{% static 'js/plugins/visualization/d3/d3_tooltip.js' %}"></script>
+	<script src="{% static 'js/plugins/forms/styling/switchery.min.js' %}"></script>
+	<script src="{% static 'js/plugins/ui/moment/moment.min.js' %}"></script>
+	<script src="{% static 'js/plugins/pickers/daterangepicker.js' %}"></script>
+
+	<script src="{% static 'assets/js/app.js' %}"></script>
+	<script src="{% static 'js/demo_pages/dashboard.js' %}"></script>
+	<script src="{% static 'js/demo_charts/pages/dashboard/light/streamgraph.js' %}"></script>
+	<script src="{% static 'js/demo_charts/pages/dashboard/light/sparklines.js' %}"></script>
+	
+
+	
+
+</head>
+
+<body>
+
+	<!-- Main navbar -->
+	{% include "barra_superior.html" %}   
+	<!-- /main navbar -->
+
+
+	<!-- Page content -->
+	<div class="page-content">
+
+		<!-- Main sidebar -->
+
+		<!-- /Main sidebar -->
+		{% include "barra_lateral.html" %}
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			<!-- Page header -->
+			<div class="page-header page-header-light">
+				<div class="page-header-content header-elements-md-inline">
+					<div class="page-title d-flex">
+						<h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Metodologia</span> - Análise semântica de comentários</h4>
+						<a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+					</div>
+					
+				</div>
+				
+			</div>
+			<!-- /page header -->
+			<div class="content">
+				<div class="card">
+					<div class="card-header header-elements-inline">
+						<h5 class="card-title">Análise semântica de comentários</h5>
+					</div>
+					<div class="card-body">
+						<p>A Fazer: Desenvolver os seguintes argumentos/informações</p>
+						<ul><li>Começar resumindo a análise, do inicio ao fim, de forma superficial.</li>
+							<li>A idéia geral da análise é essa: Observar um grande volume de conversas sobre bitcoin feitas no reddit nos ultimos anos, comparar com as conversas recentes, e usar aprendizado de máquina para verificar se os comentários recentes são comentários que normalmente precedem aumentos ou quedas</li>
+							<li>Começar então a desenvolver de forma detalhada, desde o inicio</li>
+							<li>1- Listamos as mensagens trocadas anteriores as ultimas 24h</li>
+							<li>2- Usamos um processador de linguagem natural no idioma inglês, chamado Spacy (Falar mais do Spacy), para separar comentários em frases</li>
+							<li>3- Usar o Spacy para remover palavras sem significado semântico. (Falar mais sobre Stop Words)</li>
+							<li>4- Para as palavras com significado semântico, usar apenas os lemmas das frases. (Falar mais sobre lemarização e tokenização)</li>
+							<li>5- Criar um modelo de Aprendizado de Máquina do tipo Regressão Logística (Falar mais sobre Regressão Logística), utilizando o sklearn (Falar mais sobre sklearn). Os insumos serão as frases obtidas no passo 4, e o teste será: Positivo se houve aumento no valor do bitcoin nas 24h seguintes, ou Negativo se houve queda</li>
+							<li>6- Testar o modelo usando os recursos de teste do skylearn. Onde o modelo separa aleatóriamente 90% dos seus dados como insumo, 10% como entrada de avaliação (ignorando que já sabe a resposta, se houve aumento ou nao nesses dias), e então verifica se a avaliação obteve os valores corretos para o teste</li>
+							<li>7- O passo 6 fornece 4 métricas. Verdadeiros Positivos, Falsos Positivos, Verdadeiros Negativos e Falsos Negativos. Essas métricas permitem obter a precisão do modelo. Falar mais sobre essas métricas e sobre a previsão atual do nosso modelo</li>
+							<li>8- Listar as mensagens recentes, das últimas 24 horas. Aplicar o mesmo tratamento dos passos 2-4, e então avaliar com nosso modelo para obter um Positivo ou Negativo.</li>
+							<li>9- O passo 8 fornece o resultado da análise. A partir do resultado obtido, iremos acrescentar ou decrescentar 5% dos valores futuros no gráfico de Análises Consolidadas no Dashboard.</li>
+							<li>Exibir mensagens anteriores, e seu processo de tratamento. (Passos 1-4)</li>
+							<li>Exibir métricas (Passo 7). Verificar se é possivel obter as amostras do passo 6, para exibir</li>
+							<li>Exibir mensagens recentes e seu processo de tratamento. (Passo 8)</li>
+							<li>Exibir resultado (Passo 9)</li>                        
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+
+			<!-- Footer -->
+			<!-- Main navbar -->
+			{% include "footer.html" %}   
+			<!-- /main navbar -->
+			<!-- /footer -->
+
+		</div>
+		<!-- /main content -->
+
+	</div>
+	<!-- /page content -->
+
+</body>
+</html>

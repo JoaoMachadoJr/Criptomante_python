@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Criptomante - Análise por padrões numéricos</title>
+
+	<!-- Global stylesheets -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/icons/icomoon/styles.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap_limitless.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/layout.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/components.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/colors.min.css' %}" rel="stylesheet" type="text/css">
+	<!-- /global stylesheets -->
+
+	<!-- Core JS files -->
+	<script src="{% static 'js/main/jquery.min.js' %}"></script>
+	<script src="{% static 'js/main/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'js/plugins/loaders/blockui.min.js' %}"></script>
+	<script src="{% static 'js/plugins/visualization/echarts/echarts.min.js' %}"></script>
+	<!-- /core JS files -->
+
+	<!-- Theme JS files -->
+	<script src="{% static 'js/plugins/visualization/d3/d3.min.js' %}"></script>
+	<script src="{% static 'js/plugins/visualization/d3/d3_tooltip.js' %}"></script>
+	<script src="{% static 'js/plugins/forms/styling/switchery.min.js' %}"></script>
+	<script src="{% static 'js/plugins/ui/moment/moment.min.js' %}"></script>
+	<script src="{% static 'js/plugins/pickers/daterangepicker.js' %}"></script>
+
+	<script src="{% static 'assets/js/app.js' %}"></script>
+	<script src="{% static 'js/demo_pages/dashboard.js' %}"></script>
+	<script src="{% static 'js/demo_charts/pages/dashboard/light/streamgraph.js' %}"></script>
+	<script src="{% static 'js/demo_charts/pages/dashboard/light/sparklines.js' %}"></script>
+	
+
+	
+
+</head>
+
+<body>
+
+	<!-- Main navbar -->
+	{% include "barra_superior.html" %}   
+	<!-- /main navbar -->
+
+
+	<!-- Page content -->
+	<div class="page-content">
+
+		<!-- Main sidebar -->
+
+		<!-- /Main sidebar -->
+		{% include "barra_lateral.html" %}
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			<!-- Page header -->
+			<div class="page-header page-header-light">
+				<div class="page-header-content header-elements-md-inline">
+					<div class="page-title d-flex">
+						<h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Metodologia</span> - Análise por padrões numéricos</h4>
+						<a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+					</div>
+					
+				</div>
+				
+			</div>
+			<!-- /page header -->
+			<div class="content">
+				<div class="card">
+					<div class="card-header header-elements-inline">
+						<h5 class="card-title">Análise por padrões numéricos</h5>
+					</div>
+					<div class="card-body">
+						<p>A Fazer: Desenvolver os seguintes argumentos/informações</p>
+						<ul><li>Começar resumindo a análise, do inicio ao fim, de forma superficial.</li>
+							<li>A idéia geral da análise é essa: Hoje o gráfico do Bitcoin está assim. Nas outras vezes em que ele estevw mais ou menos assim, nos dias seguintes o bitcoin subiu/desceu X%</li>
+							<li>Começar então a desenvolver de forma detalhada, desde o inicio</li>
+							<li>1- Listamos as transações de bitcoin dos últimos 6 meses</li>
+							<li>2- Calculamos um Snapshot do grafico atual</li>
+							<li>2.1- Um snapshot é uma matriz (X,Y). Onde X é um datetime pertecente ao conjunto de Momentos-De-Estudo, e Y é a variaçãoo do preço do bitcoin (Em percentagem) entre o Momento-de-Estudo I e o Momento-de-Estudo I+1</li>
+							<li>2.2- Os Momentos-de-Estudo são: Hora Atual; 24 horas atrás; 5 dias atrás; 10 dias atrás; 20 dias atrás; 25 dias atrás; 1 mês atrás; 2 meses atrás; 3 meses atrás; 4 meses atrás; 5 meses atrás e 6 meses atrás. Sendo assim, 12 Momentos-de-Estudo</li>
+							<li>2.3- Todos os Momentos-de-Estudo são considerados obtendo a média do valor do bitcoin Por Hora. Ou seja, os minutos, segundos e milissegundos das transações são ignorados</li>
+							<li>3- listamos todas as transações dos últimos 8 anos, que é o volume de dados que temos.</li>
+							<li>4- Calculamos os Snapshots de todos os horários dos últimos 8 anos.</li>
+							<li>5- Comparamos os Snapshots calculados no passo 4 com o Snapshot atual, calculado no passo 2, e obtemos pontuamos os Snapshots baseado na semelhança que tem com o Snapstho atual</li>
+							<li>6- Como todos os Snapshots do passo 4 são de transações passadas, nós observamos como o valor do bitcoin variou em datas posteriores aos Snapshots. E assim, calculamos que o valor futuro do bitcoin terá a mesma variação que teve nos dias seguintes aos Snapshots mais semelhantes</li>
+							<li>7- Os valores encontrados no passo 6 são os valores base do nosso gráfico de Análise Consolidada, exibido no dashboard</li>
+							<li>Exibir Cotação atual do bitcoin, em gráfico, para os ultimos 6 meses, no passo 1</li>
+							<li>Exibir Amostra da tabela de transações dos ultimos dias no passo 1. (Limitada a 100 linhas)</li>
+							<li>Exibir Snapshot atual. Em gráfico e em tabela/matriz no passo 2</li>
+							<li>Exibir Snapshots mais semelhantes do Snapshot atual, em gráfico e em tabela</li>
+							<li>Exibir predição do bitcoin, considerando apenas a análise por padrões numéricos, conforme passo 6</li>                        
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+
+			<!-- Footer -->
+			<!-- Main navbar -->
+			{% include "footer.html" %}   
+			<!-- /main navbar -->
+			<!-- /footer -->
+
+		</div>
+		<!-- /main content -->
+
+	</div>
+	<!-- /page content -->
+
+</body>
+</html>

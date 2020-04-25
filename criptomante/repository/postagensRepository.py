@@ -121,7 +121,7 @@ class PostagensRepository(AbstractRepository):
         return self.fetchOne(sql)["qnt"]
 
     def quantidade_frases_nao_tratadas(self):
-        sql = "select count(*) as qnt from frases_ocorrencias where  aumento<>queda and texto_tratado is null"
+        sql = "select count(*) as qnt from frases_ocorrencias where   texto_tratado is null"
         return self.fetchOne(sql)["qnt"]
     
     def listarMensagensNaoIndexadas(self, limite:int = 1000000):
@@ -138,7 +138,7 @@ class PostagensRepository(AbstractRepository):
         return saida
 
     def listarFrasesNaoTratadas(self, limite:int = 1000000):
-        sql = "select texto from frases_ocorrencias where aumento<>queda and texto_tratado is null limit :limite"
+        sql = "select texto from frases_ocorrencias where  texto_tratado is null limit :limite"
         result = self.fetchAll(sql, {"limite": limite})
         saida = [r["texto"] for r in result]
         return saida
@@ -198,11 +198,22 @@ class PostagensRepository(AbstractRepository):
         result = self.fetchAll(sql)
         return [r["texto"] for r in result]
     
+    def listar_frases_recentes_linguagem_natural(self):
+        sql = "select distinct texto_tratado from frases_recentes f join frases_ocorrencias fo on md5(fo.texto) = md5(f.texto)"
+        result = self.fetchAll(sql)
+        return [r["texto_tratado"] for r in result]
+    
     def listar_frases_com_tendencia(self):
         sql = """select texto from frases_ocorrencias fo
-                where  (fo.aumento<>fo.queda)"""
+                where  (fo.aumento<>fo.queda)  and (aumento+queda)>3"""
         result = self.fetchAll(sql)
         return [r["texto"] for r in result]
+
+    def listar_frases_com_tendencia_linguagem_natural(self):
+        sql = """select texto_tratado from frases_ocorrencias fo
+                where  (fo.aumento<>fo.queda)  and (aumento+queda)>3"""
+        result = self.fetchAll(sql)
+        return [r["texto_tratado"] for r in result]
     
     
     def insere_tabela_associacoes(self, associacoes, tipo_associacao):
@@ -215,11 +226,18 @@ class PostagensRepository(AbstractRepository):
         self.commit()
     
     def preencher_tabela_associacoes_com_ocorrencias(self):
-        sql = """ 
+        sql = """
+                with aux as (
+                    select lower(fa.frase) as frase, sum(fo.queda) as queda, sum(fo.aumento) as aumento
+                    from frases_associacoes fa
+                    join frases_ocorrencias fo on  lower(fo.texto)=lower(fa.frase)
+                    group by  lower(fa.frase)
+                ) 
                 update frases_associacoes as fa
-                set tendencia = (case when fo.queda>fo.aumento then 'QUEDA' else 'AUMENTO' end)
-                from frases_ocorrencias fo
-                where md5(fo.texto)=md5(fa.frase)
+                set tendencia = (case when fo.queda>fo.aumento then 'QUEDA' else 'AUMENTO' end),
+                positividade = cast((cast(fo.aumento as numeric)/cast(fo.aumento + fo.queda as numeric)) as numeric)
+                from aux fo
+                where fo.frase=lower(fa.frase)
             """
         self.execute(sql)
     
@@ -330,6 +348,21 @@ class PostagensRepository(AbstractRepository):
                 delete from frases where REGEXP_REPLACE(texto, '[, 0123456789]+','') =''
                 """        
         self.execute(sql)
+
+    def texto_recente(self):
+        #Pegar data de texto mais recente
+        sql="select max(data) as data from mensagens"
+        maior_data = self.fetchOne(sql)["data"]
+
+        #Pegar texto
+        sql_textos_recentes = """   
+                                select string_agg(texto_tratado, '\n') as texto                    
+                                from frases f
+                                join mensagens m on m.mensagem=f.mensagem
+                                join frases_ocorrencias fo on md5(f.texto) = md5(fo.texto)  and texto_tratado is not null
+                                where m.data>(:data - interval '1 day')                                   
+                              """ 
+        return self.fetchOne(sql_textos_recentes, {"data":maior_data})["texto"]
 
 
 
