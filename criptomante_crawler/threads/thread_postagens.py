@@ -43,7 +43,7 @@ class ThreadPostagens(MinhaThread):
             ThreadPostagens.esperando_novos=False
         for postagem in postagens:
             crawler:AbstractCrawler = ThreadPostagens.getCrawler(postagem.website)
-            t = ThreadPostagens()
+            t = ThreadPostagens(daemon=True)
             t.url = postagem.url
             t.crawler = crawler
             t.post = postagem            

@@ -16,7 +16,7 @@ class GerenciadorThreads(MinhaThread):
         classe_threads.esperando_novos = True
         classe_threads.quantidade_limite = quantidade_limite
 
-        gerenciador = GerenciadorThreads()
+        gerenciador = GerenciadorThreads(daemon=True)
         gerenciador.classe_threads = classe_threads
         gerenciador.imprimir_progresso = imprimir_progresso
         gerenciador.quantidade_limite = quantidade_limite

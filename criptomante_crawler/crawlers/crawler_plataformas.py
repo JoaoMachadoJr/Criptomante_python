@@ -119,7 +119,7 @@ class CrawlerPlataformas:
                 if paralelo:
                     crawler = CrawlerPlataformas()
                     crawler.plataforma = p
-                    t = Thread(target=crawler.consultar_dados_antigos)
+                    t = Thread(target=crawler.consultar_dados_antigos, daemon=True)
                     t.name = "Consultar_dados_antigos"
                     lista_threads.append(t)
                     t.start()
@@ -130,7 +130,7 @@ class CrawlerPlataformas:
                 if paralelo:
                     crawler = CrawlerPlataformas()
                     crawler.plataforma = p
-                    t = Thread(target=crawler.consultar_dados_recentes)
+                    t = Thread(target=crawler.consultar_dados_recentes, daemon=True)
                     t.name = "Consultar_dados_recentes"
                     lista_threads.append(t)
                     t.start()
