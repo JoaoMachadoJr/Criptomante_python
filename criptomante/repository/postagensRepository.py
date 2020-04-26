@@ -184,6 +184,8 @@ class PostagensRepository(AbstractRepository):
         self.executeMany(sql, parametros)
     
     def sinalizar_frases_indexadas(self, frases:List[str]):
+        if len(frases)==0:
+            return
         sql = "update frases set indexada=true where frase in :frases"
         params = {"frases":tuple(frases)}
         self.execute(sql, params)
