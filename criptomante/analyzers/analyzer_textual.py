@@ -12,6 +12,7 @@ from criptomante.repository.cotacoes_repository import CotacoesRepository
 from datetime import datetime, timedelta
 from criptomante.repository.postagensRepository import PostagensRepository
 import re
+import os
 from criptomante.model.mensagem import Mensagem
 from criptomante.model.sentenca import Sentenca
 from typing import List
@@ -327,7 +328,7 @@ class AnalyzerTextual:
 
         dados = ResultadosRepository().recuperar_analise_semantica()
         
-        if (dados!=None) and (datetime.now() + timedelta(days=7) > dados["datahora"]):
+        if (dados!=None) and (datetime.now() + timedelta(days=7) > dados["datahora"] and (os.path.isfile('modelo.joblib'))):
             modelo = load('modelo.joblib')
         else:
             dados:dict = machine_learn.contruir_modelo(self.carregar_dataset())

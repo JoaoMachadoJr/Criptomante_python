@@ -30,7 +30,7 @@ class AbstractCrawler(ABC):
         repositorio = PostagensRepository()
 
         if iniciar_leitor_postagens:
-            GerenciadorThreads.iniciar_gerenciamento(ThreadPostagens, True, quantidade_limite=25, fabricar=True, timeout=120)
+            GerenciadorThreads.iniciar_gerenciamento(ThreadPostagens, True, quantidade_limite=10, fabricar=True, timeout=120)
                 
         while (self.url!=None):
             try:                
