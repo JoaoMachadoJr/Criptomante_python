@@ -25,14 +25,16 @@ class PostagensRepository(AbstractRepository):
     def obtemPostagensNaoProcessadasComExecutor(self, limit=100, offset=0)->List[Postagem]:
         executor = random.randint(1,9999999)
         params = {"limite":limit, "offset":offset, "executor":executor}
-        sql = """with aux as (select url from topicos where executor is null and data_processamento is null order by random() limit :limite offset :offset)
+        sql = """with aux as (select url from topicos where 
+                    executor is null and 
+                    (data_processamento is null or (data + ( interval '1 day'*2)) > cast(current_timestamp as date)) order by random() limit :limite offset :offset)
                 update topicos as topicos
                 set executor=:executor
                 from aux aux
-                where aux.url=topicos.url and topicos.executor is null and topicos.data_processamento is null"""
+                where aux.url=topicos.url """
         self.execute(sql,params)
 
-        sql = "Select data, url, website from topicos where data_processamento is null and executor = :executor "
+        sql = "Select data, url, website from topicos where  executor = :executor "
         result = self.fetchAll(sql,params)
         saida = list()
         for obj in result:
@@ -73,18 +75,24 @@ class PostagensRepository(AbstractRepository):
         params = [{"website":postagem.website, "url":postagem.url, "data":postagem.data} for postagem in postagens]
         self.executeMany(sql, params)
 
-    def insereMensagens(self, mensagens: List[Mensagem]):
+    def insereMensagens(self, mensagens: List[Mensagem], topico):
+        sql = "select texto from mensagens where topico_url=:url"
+        mensagens_ja_salvas = [d["texto"] for d in self.fetchAll(sql, {"url":topico})]
+
+        
         sql = "insert into mensagens (texto, data, topico_url, mensagem) values (:texto, :data, :topico_url, :mensagem)"
         params = list()
-        if len(mensagens)==0:
-            return
         for mensagem in mensagens:
+            if mensagem.texto in mensagens_ja_salvas:
+                continue
             param = dict()
             param["texto"] = mensagem.texto
             param["data"] = mensagem.data
             param["topico_url"] = mensagem.postagem_url
             param["mensagem"] = uuid.uuid4()
             params.append(param)
+        if len(params)==0:
+            return
         self.executeMany(sql, params)
     
     def sinalizaPostagemProcessada(self, url):

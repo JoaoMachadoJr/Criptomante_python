@@ -25,7 +25,7 @@ class ThreadPostagens(MinhaThread):
         
         mensagens = self.crawler.processar_postagem(self.url, self.post)
         repository = PostagensRepository()
-        repository.insereMensagens(mensagens)
+        repository.insereMensagens(mensagens, self.url)
         repository.sinalizaPostagemProcessada(self.url)
         self.continuar=False
                                                 
