@@ -138,6 +138,8 @@ class AnalyzerTextual:
 
                 repositorio.registrar_ocorrencia_frases_com_numero_aumentos_e_queda(list(resultado.values()))
                 repositorio.sinalizar_frases_indexadas([frase.frase for frase in frases if frase.indexada])
+                if len([frase.frase for frase in frases if frase.indexada])==0:
+                    break
 
     def criar_tabela_ocorrencia_frases_com_numero_aumentos_e_quedaV2(self):
         print("criar_tabela_ocorrencia_frases_com_numero_aumentos_e_quedaV2")
