@@ -78,26 +78,64 @@
 						<h5 class="card-title">Análise por padrões numéricos</h5>
 					</div>
 					<div class="card-body">
-						<p>A Fazer: Desenvolver os seguintes argumentos/informações</p>
-						<ul><li>Começar resumindo a análise, do inicio ao fim, de forma superficial.</li>
-							<li>A idéia geral da análise é essa: Hoje o gráfico do Bitcoin está assim. Nas outras vezes em que ele estevw mais ou menos assim, nos dias seguintes o bitcoin subiu/desceu X%</li>
-							<li>Começar então a desenvolver de forma detalhada, desde o inicio</li>
-							<li>1- Listamos as transações de bitcoin dos últimos 6 meses</li>
-							<li>2- Calculamos um Snapshot do grafico atual</li>
-							<li>2.1- Um snapshot é uma matriz (X,Y). Onde X é um datetime pertecente ao conjunto de Momentos-De-Estudo, e Y é a variaçãoo do preço do bitcoin (Em percentagem) entre o Momento-de-Estudo I e o Momento-de-Estudo I+1</li>
-							<li>2.2- Os Momentos-de-Estudo são: Hora Atual; 24 horas atrás; 5 dias atrás; 10 dias atrás; 20 dias atrás; 25 dias atrás; 1 mês atrás; 2 meses atrás; 3 meses atrás; 4 meses atrás; 5 meses atrás e 6 meses atrás. Sendo assim, 12 Momentos-de-Estudo</li>
-							<li>2.3- Todos os Momentos-de-Estudo são considerados obtendo a média do valor do bitcoin Por Hora. Ou seja, os minutos, segundos e milissegundos das transações são ignorados</li>
-							<li>3- listamos todas as transações dos últimos 8 anos, que é o volume de dados que temos.</li>
-							<li>4- Calculamos os Snapshots de todos os horários dos últimos 8 anos.</li>
-							<li>5- Comparamos os Snapshots calculados no passo 4 com o Snapshot atual, calculado no passo 2, e obtemos pontuamos os Snapshots baseado na semelhança que tem com o Snapstho atual</li>
-							<li>6- Como todos os Snapshots do passo 4 são de transações passadas, nós observamos como o valor do bitcoin variou em datas posteriores aos Snapshots. E assim, calculamos que o valor futuro do bitcoin terá a mesma variação que teve nos dias seguintes aos Snapshots mais semelhantes</li>
-							<li>7- Os valores encontrados no passo 6 são os valores base do nosso gráfico de Análise Consolidada, exibido no dashboard</li>
-							<li>Exibir Cotação atual do bitcoin, em gráfico, para os ultimos 6 meses, no passo 1</li>
-							<li>Exibir Amostra da tabela de transações dos ultimos dias no passo 1. (Limitada a 100 linhas)</li>
-							<li>Exibir Snapshot atual. Em gráfico e em tabela/matriz no passo 2</li>
-							<li>Exibir Snapshots mais semelhantes do Snapshot atual, em gráfico e em tabela</li>
-							<li>Exibir predição do bitcoin, considerando apenas a análise por padrões numéricos, conforme passo 6</li>                        
-						</ul>
+					<!-- /Inicio do texto -->
+						<p class="MsoNormal"><b>Análise de padrões numéricos<o:p></o:p></b></p><p class="MsoNormal">A análise de padrões numéricos, como todas as análises
+						desenvolvidas nesse projeto, se baseia no <b>princípio de ondas de Elliot, </b>que
+						afirma que as variações nos valores de ativos financeiros são cíclicas.<o:p></o:p></p><p class="MsoNormal">Nessa análise criamos uma estrutura de dados, chamada de <b>snapshot</b>,
+						que é capaz de descrever a vizinhança de variação da Bitcoin em um dado
+						momento.<o:p></o:p></p><p class="MsoNormal">Assim, utilizando um método capaz de avaliar a semelhança de
+						dois snapshots, realizamos um estudo sobre qual snapshot do histórico da
+						Bitcoin é mais parecido com o snapshot da data atual. Assim, assumimos que a
+						tendência de variação da Bitcoin é igual a tendência de datas que tiveram
+						snapshots semelhantes ao snapshot atual.<o:p></o:p></p><p class="MsoNormal">Segue abaixo o roteiro detalhado do algoritmo:<o:p></o:p></p><p>
+
+						<span style="font-size:11.0pt;line-height:107%;font-family:&quot;Calibri&quot;,sans-serif;
+						mso-ascii-theme-font:minor-latin;mso-fareast-font-family:Calibri;mso-fareast-theme-font:
+						minor-latin;mso-hansi-theme-font:minor-latin;mso-bidi-font-family:&quot;Times New Roman&quot;;
+						mso-bidi-theme-font:minor-bidi;mso-ansi-language:PT-BR;mso-fareast-language:
+						EN-US;mso-bidi-language:AR-SA"><br clear="all" style="mso-special-character:line-break;
+						page-break-before:always">
+						</span>
+
+						</p><p class="MsoNormal"><o:p>&nbsp;</o:p></p><p class="MsoNormal"><b>Passo 1: Definição de um snapshot<o:p></o:p></b></p><p>
+
+
+
+						</p><p class="MsoNormal">Um snapshot é estrutura contendo 13 tuplas. Cada tupla
+						representa a variação do valor do Bitcoin entre duas datas. Cada tupla possui
+						um atributo do tipo datetime, chamado de <i>data-hora</i>, um atributo numérico
+						chamado de <i>variação</i> e uma <i>sigla</i> descritiva.</p><p class="MsoNormal"><br></p><p class="MsoNormal"><br></p><p style="text-align: center; "><img src="https://i.imgur.com/Zh1yQor.png" style="width: 650px;"></p><p style="text-align: left;"><br></p><p class="MsoNormal"><b>Passo 2: Recuperamos o gráfico da Bitcoin dos últimos 12
+						meses</b></p><p class="MsoNormal"><b>&lt;Inserir gráfico da bitcoin dos últimos 12 meses&gt;<o:p></o:p></b></p><p class="MsoNormal"><b>&nbsp;</b></p><p class="MsoNormal"><b>Passo 3: Calcular o snapshot do momento atual<o:p></o:p></b></p><p class="MsoNormal">Utilizando a definição de snapshot exibida no passo 1, e
+						aplicando para o gráfico exibido no passo 2, temos o seguinte snapshot:<o:p></o:p></p><p class="MsoNormal" style="margin-top:0cm;margin-right:149.0pt;margin-bottom:
+						8.0pt;margin-left:6.0cm"><o:p>&nbsp;</o:p></p><p class="MsoNormal"><b>&lt;Inserir tabela contendo o snapshot atual&gt;<o:p></o:p></b></p><p class="MsoNormal"><b>&nbsp;</b></p><p class="MsoNormal"><b>Passo 4: Buscamos snapshots semelhantes<o:p></o:p></b></p><p class="MsoNormal">Em nosso banco de dados, as transações de compra-e-venda de
+						bitcoin são agrupadas por dia e hora. Isso nos fornece 24 registros de cotação contendo
+						o valor médio da Bitcoin por dia.<o:p></o:p></p><p class="MsoNormal">Nesse passo, calculamos snapshots cada um dos mais de 70.000
+						registros de cotação de Bitcoin no banco de dados.<o:p></o:p></p><p class="MsoNormal">Então pontuamos cada snapshot conforme a sua semelhança com
+						o snapshot atual. A pontuação de um snapshot será igual a quantidade de linhas
+						em que a variação desse snapshot for igual a variação do snapshot atual, com uma
+						margem de tolerância de 10%, para a mesma sigla.<o:p></o:p></p><p class="MsoNormal">
+
+
+						</p><p class="MsoNormal">O seguinte código-fonte Python expressa a função:</p><p class="MsoNormal" style="text-align: center; "><img src="https://i.imgur.com/ME5EECV.png" style="width: 633px;"></p><p class="MsoNormal"><br></p><p class="MsoNormal"><br></p><p class="MsoNormal"><br></p><p class="MsoNormal">Por fim, definimos um peso para cada snapshot, exponencial à
+						sua pontuação. Utilizando a seguinte equação:<o:p></o:p></p><p class="MsoNormal" style="text-align: center;"><img src="https://i.imgur.com/76fqNSk.png" style="width: 207px;"><br></p><p class="MsoNormal">Segue abaixo os snapshots com as maiores pontuações quando
+						comparados com o snapshot exibido no passo 3:<o:p></o:p></p><p class="MsoNormal">
+
+						</p><p class="MsoNormal">&lt;Inserir snapshots com maiores pontuações&gt;</p><p class="MsoNormal"><br></p><p class="MsoNormal"><br></p><p class="MsoNormal"><b>Passo 5: Método de previsão<o:p></o:p></b></p><p class="MsoNormal">A previsão da variação da Bitcoin para uma data futura
+						qualquer, que esteja a X dias da data atual, é calculada da seguinte forma:<o:p></o:p></p><p class="MsoNormal">Criamos uma lista com vazia. Então, para cada snapshot cujo
+						peso calculado seja maior do que zero, calculamos a variação no valor da
+						Bitcoin entre a data-hora base e X dias futuros a essa data-hora base. E então,
+						adicionamos a lista.<o:p></o:p></p><p class="MsoNormal">Então, cada elemento adicionado a lista será repetido um
+						número de vezes igual ao peso de seu snapshot. Isso nos garante que snapshots
+						de datas com maior semelhança com a data atual ocuparão mais lugares na lista.<o:p></o:p></p><p class="MsoNormal">Finalmente, ordenamos a lista e encontramos sua mediana. A
+						mediana encontrada será a variação prevista para a data que esteja X dias no
+						futuro. Usamos a mediana, ao invés da média, como tratamento de outliners, que
+						em valores de ativos financeiros, normalmente apontam eventos não-ciclicos.<o:p></o:p></p><p class="MsoNormal">Abaixo, segue a lista de valores para 30 dias no futuro,
+						para os snapshots com maiores pontuação exibidos no passo 3.<o:p></o:p></p><p class="MsoNormal">&lt;Inserir lista para os snapshots de maiores pontuações,
+						para D+30&gt;<o:p></o:p></p><p class="MsoNormal">E segue abaixo a lista completa, com todos os snapshots
+						considerados<o:p></o:p></p><p class="MsoNormal">&lt;Inserir lista completa para D+30&gt;<o:p></o:p></p><p class="MsoNormal">Por fim, podemos calcular mais datas futuras, e gerar um
+						gráfico com o valor previsto para o futuro da Bitcoin<o:p></o:p></p><p class="MsoNormal">
+
+						</p><p class="MsoNormal">&lt;Inserir gráfico com a análise numérica apenas&gt;<o:p></o:p></p><p class="MsoNormal"><o:p></o:p></p><p class="MsoNormal"><o:p></o:p></p><p class="MsoNormal"><b><o:p></o:p></b></p><p class="MsoNormal"><o:p></o:p></p>
 					</div>
 				</div>
 			</div>
