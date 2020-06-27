@@ -9693,7 +9693,7 @@ img.fancytree-icon {
   content: ""; }
 
 .fancytree-has-children.fancytree-ico-c .fancytree-icon:after {
-  content: ""; }
+  content: ""; }
 
 .fancytree-has-children.fancytree-ico-e .fancytree-icon:after {
   content: ""; }
@@ -9703,7 +9703,7 @@ img.fancytree-icon {
   content: ""; }
 
 .fancytree-has-children.fancytree-ico-cf .fancytree-icon:after {
-  content: ""; }
+  content: ""; }
 
 .fancytree-has-children.fancytree-ico-ef .fancytree-icon:after {
   content: ""; }
@@ -11493,7 +11493,7 @@ a.fc-more {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale; }
   .dataTable thead .sorting:before {
-    content: "";
+    content: "";
     margin-top: -0.125rem;
     opacity: 0.5; }
   .dataTable thead .sorting:after {
@@ -11504,13 +11504,13 @@ a.fc-more {
     content: "";
     opacity: 1; }
   .dataTable thead .sorting_desc:after {
-    content: "";
+    content: "";
     opacity: 1; }
   .dataTable thead .sorting_asc_disabled:after {
     content: "";
     opacity: 0.25; }
   .dataTable thead .sorting_desc_disabled:after {
-    content: "";
+    content: "";
     opacity: 0.25; }
   .dataTable tbody + thead > tr:first-child > th,
   .dataTable tbody + thead > tr:first-child > td,
@@ -12459,6 +12459,12 @@ a.fc-more {
 
 .has-fixed-height {
   height: 400px; }
+
+.has-relative-width {
+  width: 70%;
+  position: relative;
+  text-align: center; 
+}  
 
 .has-half-fixed-height {
   height: 200px; }

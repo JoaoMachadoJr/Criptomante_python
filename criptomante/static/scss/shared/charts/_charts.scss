@@ -34,6 +34,7 @@
         position: relative;
         display: block;
         width: 100%;
+        text-align: center;
         @if $direction == 'RTL' {
             /*rtl:ignore*/
             direction: ltr;
@@ -49,6 +50,11 @@
     .has-fixed-height {
         height: $chart-container-height;
     }
+    .has-relative-width {
+        width: 70%;
+        position: relative;
+        text-align: center; 
+    } 
 
     // Pie charts
     .chart-pie {

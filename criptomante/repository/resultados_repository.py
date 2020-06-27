@@ -1,4 +1,8 @@
 from criptomante.repository.abstract_repository import AbstractRepository
+from criptomante.model.snapshot import Snapshot, Momento
+from criptomante.model.cotacao import Cotacao
+from typing import List
+import datetime
 
 class ResultadosRepository(AbstractRepository):
     def cotacoes_medias_diarias(self, limite_inferior, limite_superior):
@@ -34,6 +38,81 @@ class ResultadosRepository(AbstractRepository):
         sql = """select frase, tipo, url_topico, aumentos, quedas from graficos.comentarios_recentes  where tipo like (:prefixo||'%%') and CHAR_LENGTH(frase)>10                 
                 order by GREATEST(cast(aumentos/cast(aumentos+quedas as numeric) as numeric),cast(quedas/cast(quedas+aumentos as numeric) as numeric)) desc"""
         return self.fetchAll(sql, {"prefixo":prefixo})
+
+    def inserir_snapshots(self, snapshots: List[Snapshot]):
+        self.begin()
+        sql = "delete from graficos.snapshots"        
+        self.execute(sql)
+        sql = """
+            insert into graficos.snapshots (dr, sigla, data, variacao, valor, tipo, pontuacao, peso, data_referencia)
+            values (:dr, :sigla, :data, :variacao, :valor, :tipo, :pontuacao, :peso, :data_referencia)
+        """
+        batch = []
+        for s in snapshots:            
+            for momento in s.momentos.keys():
+                param= dict()
+                param["dr"] = s.data
+                param["sigla"] = momento
+                param["data"] = s.momentos[momento].data
+                param["variacao"] = s.momentos[momento].variacao
+                param["valor"] = s.momentos[momento].valor
+                if s.momentos[momento].data < s.data:
+                    param["tipo"] = "Passado"
+                elif s.momentos[momento].data > s.data:
+                    param["tipo"] = "Futuro"
+                else:
+                    param["tipo"] = "Presente"
+                param["pontuacao"] = s.pontuacao
+                param["peso"] = pow(s.pontuacao, s.pontuacao)
+                param["data_referencia"] = s.momentos[momento].data_referencia
+                batch.append(param)
+        self.executeMany(sql, batch)
+        self.commit()
+
+    def listar_snapshots(self):
+        sql = "select * from graficos.snapshots order by dr, data"
+        result = self.fetchAll(sql)
+
+        return self.resultset_to_snapshots(result)
+        
+    def listar_snapshot_mais_recente(self):
+        sql = """select * 
+                    from graficos.snapshots s 
+                    where s.dr = (select max(s2.dr) from graficos.snapshots s2) 
+                        and s.tipo <> 'Futuro'
+                    order by dr, data desc"""
+        result = self.fetchAll(sql)
+        return self.resultset_to_snapshots(result)
+    
+    def listar_snapshot_maior_pontuacao(self):
+        sql = """select * 
+                from graficos.snapshots s 
+                where s.pontuacao in (select distinct s2.pontuacao from graficos.snapshots s2 order by s2.pontuacao desc limit 3) 
+                    and s.dr <> (select max(s3.dr) from graficos.snapshots s3)
+                order by s.pontuacao desc, dr, data
+        """
+        result = self.fetchAll(sql)
+        return self.resultset_to_snapshots(result)
+
+    def resultset_to_snapshots(self, resultset):
+        saida = list()
+        ultimo_dr = datetime.date(2000,1,1)
+        s :Snapshot= None
+        for r in resultset:
+            if r["dr"]!=ultimo_dr:
+                s = Snapshot()
+                s.data = r["dr"]
+                s.pontuacao = r["pontuacao"]
+                ultimo_dr = r["dr"]
+                saida.append(s)
+            s.momentos[r["sigla"]] = Momento.encode(r["data"], r["data_referencia"])
+            s.momentos[r["sigla"]].valor = r["valor"]
+            s.momentos[r["sigla"]].variacao = r["variacao"]
+        return saida
+
+
+                
+                
 
     def gravar_dados_tabela_comentarios(self):
         self.begin()

@@ -11715,7 +11715,7 @@ img.fancytree-icon {
 }
 
 .fancytree-has-children.fancytree-ico-c .fancytree-icon:after {
-    content: ""
+    content: ""
 }
 
 .fancytree-has-children.fancytree-ico-e .fancytree-icon:after {
@@ -11727,7 +11727,7 @@ img.fancytree-icon {
 }
 
 .fancytree-has-children.fancytree-ico-cf .fancytree-icon:after {
-    content: ""
+    content: ""
 }
 
 .fancytree-has-children.fancytree-ico-ef .fancytree-icon:after {
@@ -14012,7 +14012,7 @@ a.fc-more:hover {
 }
 
 .dataTable thead .sorting:before {
-    content: "";
+    content: "";
     margin-top: -.125rem;
     opacity: .5
 }
@@ -14029,7 +14029,7 @@ a.fc-more:hover {
 }
 
 .dataTable thead .sorting_desc:after {
-    content: "";
+    content: "";
     opacity: 1
 }
 
@@ -14039,7 +14039,7 @@ a.fc-more:hover {
 }
 
 .dataTable thead .sorting_desc_disabled:after {
-    content: "";
+    content: "";
     opacity: .25
 }
 
@@ -15117,6 +15117,11 @@ a.fc-more:hover {
 
 .has-fixed-height {
     height: 400px
+}
+.has-relative-width {
+    width: 70%;
+    position: relative;
+    text-align: center; 
 }
 
 .has-half-fixed-height {

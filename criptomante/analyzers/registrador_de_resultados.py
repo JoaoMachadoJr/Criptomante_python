@@ -13,7 +13,7 @@ class RegistradorDeResultados:
     def registrar_resultado_numerico(self):
         print("registrar_resultado_numerico")
         hoje = datetime.today()
-        cotacoes = ResultadosRepository().cotacoes_medias_diarias(hoje - timedelta(days=180), hoje)
+        cotacoes = ResultadosRepository().cotacoes_medias_diarias(hoje - timedelta(months=12), hoje)
         previsoes = ResultadosRepository().listar_previsoes_numericas(hoje, 'media')
         registrar = cotacoes
         _data_anterior=None
