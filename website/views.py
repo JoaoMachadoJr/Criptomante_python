@@ -9,7 +9,7 @@ def dashboard(request):
     from django.templatetags.static import static
     
     params = dict()
-    previsao_numerica = ResultadosRepository().listar_previsao_numerica('media')    
+    previsao_numerica = ResultadosRepository().listar_previsao_numerica('mediana')    
     params["qnt_frases_tendencia"]=5
     params["comentarios_recentes"] = list()
     comentarios_recentes = ResultadosRepository().listar_comentarios_recentes("Frase")
