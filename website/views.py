@@ -13,7 +13,7 @@ def dashboard(request):
     params["qnt_frases_tendencia"]=5
     params["comentarios_recentes"] = list()
     comentarios_recentes = ResultadosRepository().listar_comentarios_recentes("Frase")
-    for c in comentarios_recentes[1:100]:
+    for c in comentarios_recentes[0:100]:
         elem = dict()
         elem["Comentário"] = '<td style="width: 70%" ><div class="d-flex align-items-center"><div><div class="text-default font-size-md"> '+c["frase"]+"</div></div> </div></td>"
         if c["aumentos"]>c["quedas"]:
@@ -28,7 +28,6 @@ def dashboard(request):
     qnt_frases_recentes_positivas = len([p for p in comentarios_recentes if  p["aumentos"]>p["quedas"]])
     qnt_frases_recentes_negativas = len([p for p in comentarios_recentes if  p["aumentos"]<=p["quedas"]])
     params["valores_donut_comentarios"] = [{'value':qnt_frases_recentes_positivas, 'name':"Positivas"}, {'value':qnt_frases_recentes_negativas, 'name':"Negativas"}]
-
 
     analise_semantica = ResultadosRepository().recuperar_analise_semantica()
     total_positivos = analise_semantica["fp"]+analise_semantica["tp"]
@@ -77,7 +76,7 @@ def apresentacao(request):
     return render(request, 'apresentacao.html', dict())
 
 def padroes_numericos(request):
-    previsao_numerica = ResultadosRepository().listar_previsao_numerica('media')
+    previsao_numerica = ResultadosRepository().listar_previsao_numerica('mediana')
     params = dict()
     params["grafico_historico"] = [ [p["data"].strftime("%Y-%m-%d"), float(p["valor"])] for p in previsao_numerica if p["data"]<=date.today() ]
     params["previsao_numerica"] = [ [p["data"].strftime("%Y-%m-%d"), float(p["valor"])] for p in previsao_numerica]
@@ -138,7 +137,5 @@ def snapshot_to_tabela(snapshot:Snapshot, snapshot_comparativo:Snapshot = None):
     return saida
  
 if __name__ == "__main__":
-    snapshot_atual : Snapshot= ResultadosRepository().listar_snapshot_mais_recente()[0]
-    print(snapshot_atual)
-
+    dashboard(None)
 

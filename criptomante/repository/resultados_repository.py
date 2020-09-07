@@ -187,3 +187,12 @@ class ResultadosRepository(AbstractRepository):
         self.execute(sql, {"datahora":maior_data,"previsao":resultado })
 
         
+"""select m.data::date,
+		count(m.mensagem),
+		avg(c1.valor),
+		avg(c2.valor)
+from mensagens m
+join cotacoes c1 on c1.data::date = m.data::date
+join cotacoes c2 on c2.data::date = (m.data::date + interval '1 day')
+where m.data::date between '01/01/2020' and '31/01/2020'
+group by m.data::date"""

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from criptomante.repository.resultados_repository import ResultadosRepository
+from dateutil import relativedelta
 
 class RegistradorDeResultados:
     def registrar_resultados(self):
@@ -13,8 +14,8 @@ class RegistradorDeResultados:
     def registrar_resultado_numerico(self):
         print("registrar_resultado_numerico")
         hoje = datetime.today()
-        cotacoes = ResultadosRepository().cotacoes_medias_diarias(hoje - timedelta(months=12), hoje)
-        previsoes = ResultadosRepository().listar_previsoes_numericas(hoje, 'media')
+        cotacoes = ResultadosRepository().cotacoes_medias_diarias(hoje - relativedelta.relativedelta(months=12), hoje)
+        previsoes = ResultadosRepository().listar_previsoes_numericas(hoje, 'mediana')
         registrar = cotacoes
         _data_anterior=None
         for _data in previsoes:
@@ -29,7 +30,7 @@ class RegistradorDeResultados:
                     registrar.append(novo)
             _data_anterior = _data
         
-        ResultadosRepository().gravar_previsao_numerica(registrar, 'media')
+        ResultadosRepository().gravar_previsao_numerica(registrar, 'mediana')
 
         
 

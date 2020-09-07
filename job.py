@@ -23,7 +23,7 @@ def run():
         crawler_reddit = CrawlerReddit("https://api.pushshift.io/reddit/search/submission/?subreddit=Bitcoin&sort_type=created_utc&sort=asc")
     else:
         crawler_reddit = CrawlerReddit("https://api.pushshift.io/reddit/search/submission/?subreddit=Bitcoin&sort_type=created_utc&sort=asc&after={}".format(int(time.mktime(ultima.data.timetuple()))))
-    crawler_reddit.website = "reddit.com/r/BitcoinMarkets"
+    crawler_reddit.website = "reddit.com/r/Bitcoin"
     crawler_reddit.navegar()
     
 

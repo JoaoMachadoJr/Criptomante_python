@@ -26,7 +26,7 @@ class CrawlerPlataformas:
         
     def consultar_dados_antigos(self):
         URL_API = "http://api.bitcoincharts.com/v1/csv/{}.csv.gz".format(self.plataforma.nome)
-        CAMINHO_ARQUIVO = "/temp/{}.csv".format(self.plataforma.nome)
+        CAMINHO_ARQUIVO = "{}.csv".format(self.plataforma.nome)
         CAMINHO_ARQUIVO_COMPACTADO = CAMINHO_ARQUIVO+".gz"        
 
         #Download do arquivo CSV

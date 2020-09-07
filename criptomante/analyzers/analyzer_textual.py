@@ -256,13 +256,6 @@ class AnalyzerTextual:
     
     def carregar_dataset(self):
         print("carregar_dataset")
-        sql = """select texto_tratado as texto, (case when aumento > queda then 1 else 0 end) as tendencia
-                from frases f
-                join mensagens m on m.mensagem=f.mensagem
-                join frases_ocorrencias fo on md5(f.texto) = md5(fo.texto) and aumento<>queda 
-                where texto_tratado is not null and aumento<>queda 
-                order by m.data                """
-
         sql = """   with variacoes as (select cot2.valor/cot1.valor as variacao, cot1.data
                         from cotacoes cot1
                         join cotacoes cot2 on (cot1.data + interval '1 day')=cot2.data)
@@ -270,10 +263,12 @@ class AnalyzerTextual:
                             (case when variacao>1.05 then 1 when variacao<0.95 then 0 else -1 end) as tendencia                    
                     from frases f
                     join mensagens m on m.mensagem=f.mensagem
-                    join frases_ocorrencias fo on md5(f.texto) = md5(fo.texto)  and texto_tratado is not null
+                    join frases_ocorrencias fo on md5(f.texto) = md5(fo.texto)  and texto_tratado is not null and texto_tratado <> ''
                     join variacoes v on v.data = date_trunc('hour', m.data) and (variacao<0.95 or variacao>1.05)
                     group by  v.data, v.variacao
+                    having string_agg(texto_tratado, '\n') <> ''
                     order by v.data  """
+
         self.dataframe = sqlio.read_sql_query(sql, PostagensRepository().conexao())
         
 

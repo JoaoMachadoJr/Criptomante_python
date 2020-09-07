@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Criptomante - Análise semântica de comentários</title>
+	<title>Criptomante - AnÃ¡lise semÃ¢ntica de comentÃ¡rios</title>
 	<link rel="shortcut icon" href="{% static 'images/logo_aba.png' %}" >
 
 	<!-- Global stylesheets -->
@@ -64,7 +64,7 @@
 			<div class="page-header page-header-light">
 				<div class="page-header-content header-elements-md-inline">
 					<div class="page-title d-flex">
-						<h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Metodologia</span> - Análise semântica de comentários</h4>
+						<h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Metodologia</span> - AnÃ¡lise semÃ¢ntica de comentÃ¡rios</h4>
 						<a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
 					</div>
 					
@@ -75,27 +75,184 @@
 			<div class="content">
 				<div class="card">
 					<div class="card-header header-elements-inline">
-						<h5 class="card-title">Análise semântica de comentários</h5>
+						<h5 class="card-title">AnÃ¡lise semÃ¢ntica de comentÃ¡rios</h5>
 					</div>
 					<div class="card-body">
-						<p>A Fazer: Desenvolver os seguintes argumentos/informações</p>
-						<ul><li>Começar resumindo a análise, do inicio ao fim, de forma superficial.</li>
-							<li>A idéia geral da análise é essa: Observar um grande volume de conversas sobre bitcoin feitas no reddit nos ultimos anos, comparar com as conversas recentes, e usar aprendizado de máquina para verificar se os comentários recentes são comentários que normalmente precedem aumentos ou quedas</li>
-							<li>Começar então a desenvolver de forma detalhada, desde o inicio</li>
-							<li>1- Listamos as mensagens trocadas anteriores as ultimas 24h</li>
-							<li>2- Usamos um processador de linguagem natural no idioma inglês, chamado Spacy (Falar mais do Spacy), para separar comentários em frases</li>
-							<li>3- Usar o Spacy para remover palavras sem significado semântico. (Falar mais sobre Stop Words)</li>
-							<li>4- Para as palavras com significado semântico, usar apenas os lemmas das frases. (Falar mais sobre lemarização e tokenização)</li>
-							<li>5- Criar um modelo de Aprendizado de Máquina do tipo Regressão Logística (Falar mais sobre Regressão Logística), utilizando o sklearn (Falar mais sobre sklearn). Os insumos serão as frases obtidas no passo 4, e o teste será: Positivo se houve aumento no valor do bitcoin nas 24h seguintes, ou Negativo se houve queda</li>
-							<li>6- Testar o modelo usando os recursos de teste do skylearn. Onde o modelo separa aleatóriamente 90% dos seus dados como insumo, 10% como entrada de avaliação (ignorando que já sabe a resposta, se houve aumento ou nao nesses dias), e então verifica se a avaliação obteve os valores corretos para o teste</li>
-							<li>7- O passo 6 fornece 4 métricas. Verdadeiros Positivos, Falsos Positivos, Verdadeiros Negativos e Falsos Negativos. Essas métricas permitem obter a precisão do modelo. Falar mais sobre essas métricas e sobre a previsão atual do nosso modelo</li>
-							<li>8- Listar as mensagens recentes, das últimas 24 horas. Aplicar o mesmo tratamento dos passos 2-4, e então avaliar com nosso modelo para obter um Positivo ou Negativo.</li>
-							<li>9- O passo 8 fornece o resultado da análise. A partir do resultado obtido, iremos acrescentar ou decrescentar 5% dos valores futuros no gráfico de Análises Consolidadas no Dashboard.</li>
-							<li>Exibir mensagens anteriores, e seu processo de tratamento. (Passos 1-4)</li>
-							<li>Exibir métricas (Passo 7). Verificar se é possivel obter as amostras do passo 6, para exibir</li>
-							<li>Exibir mensagens recentes e seu processo de tratamento. (Passo 8)</li>
-							<li>Exibir resultado (Passo 9)</li>                        
+						<p class="MsoNormal"><b>Análise semântica de comentários<o:p></o:p></b></p>
+
+						<p class="MsoNormal">A análise de padrões numéricos, como todas as análises
+						desenvolvidas nesse projeto, se baseia no <b>princípio de ondas de Elliot, </b>que
+						afirma que os fenômenos sociais e a especulação financeira são cíclicos.<o:p></o:p></p>
+
+						<p class="MsoNormal">Nessa análise utilizamos um motor de aprendizado de máquina
+						para treinar um classificador capaz de avaliar se as mensagens publicadas em
+						uma rede social implicam uma tendência de aumento ou de queda no preço da
+						Bitcoin.<o:p></o:p></p>
+
+						<p class="MsoNormal">Nesse projeto analisamos publicações na rede social <b>Reddit</b>,
+						na sessão específica de debates sobre a Bitcoin.<o:p></o:p></p>
+
+						<p class="MsoNormal">Segue abaixo o roteiro detalhado da análise<o:p></o:p></p>
+
+						<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+						<p class="MsoNormal"><b>Passo 1:</b> <b>Definimos um padrão de tratamento de
+						texto.<o:p></o:p></b></p>
+
+						<p class="MsoNormal">Nessa análise usaremos um classificador para classificar o
+						conteúdo publicado na rede social.<o:p></o:p></p>
+
+						<p class="MsoNormal">Na implementação desse tipo de classificador, é comum que
+						haja um tratamento no texto de entrada.<o:p></o:p></p>
+
+						<p class="MsoNormal">Nosso padrão de tratamento inclui:<o:p></o:p></p>
+
+						<ul>
+							<li><span style="font-size: 0.8125rem; text-indent: -18pt;">Separação de mensagens longas em sentenças menores, utilizando Spacy</span></li>
+							<li><span style="text-indent: -18pt; font-size: 0.8125rem;">Remoção de alguns caracteres especiais e símbolos</span></li>
+							<li><span style="text-indent: -18pt; font-size: 0.8125rem;">Lematização</span></li>
+							<li><span style="text-indent: -18pt; font-size: 0.8125rem;">E Remoção de Stop Words</span></li>
 						</ul>
+
+						<p class="MsoNormal">Por exemplo, essa é uma <a href="https://old.reddit.com/r/Bitcoin/comments/1ux3ls/to_all_the_people_insisting_we_need_a_protocol/" target="_blank">mensagem</a> anterior ao tratamento:<o:p></o:p></p>
+						<br>
+
+						<p class="MsoNormal"><i>"But the people's concerns regarding control are legitimate.  
+												<br>We know from history that any kind of centralized power and control of anything, much less money, will be abused.   
+												<br>Absolute power corrupts absolutely.
+												<br>Sure, the mining pool operators have no incentive to torpedo faith in bitcoin now.  
+												<br>But what if those centralized mining pools are compromised by other interests.  
+												<br>Perhaps a government or competing corporation or organized crime organization might want to take down bitcoin.
+												<br>Where would ill wishers of bitcoin attack?  The area of most centralization.  
+												<br>That centralized point could be the exchanges, it could be the ASIC mining manufacturers, or in our example, it could be the owners of the mining pools.
+												<br>How would they attack the miners?  Many ways.  They could hack the pool owners' systems.  
+												<br>An outside group could bribe the pool owners by offering them more wealth than they're making mining.    
+												<br>An entity could threaten, harass, or blackmail mining pool owners.  
+												<br>This threat could take the form of legal action, or in some countries, physical violence to the mining pool owners and their families.  
+												<br>TL;DR  The 51% issue needs to be closely monitored by bitcoin stakeholders."
+</i><o:p></o:p></p>
+						<br>
+						<p class="MsoNormal">E essa é a mesma mensagem após o tratamento<o:p></o:p></p>
+						<br>
+
+						<i>"people concern control legitimate"
+						<br>"know history kind centralized power control money abuse"
+						<br>"absolute power corrupt absolutely"
+						<br>"sure mining pool operator incentive torpedo faith bitcoin"
+						<br>"centralized mining pool compromise interest"
+						<br>"government compete corporation organize crime organization want bitcoin"
+						<br>"ill wisher bitcoin attack"
+						<br>"area centralization"
+						<br>"centralized point exchange asic mining manufacturer example owner mining pool"
+						<br>"attack miner"
+						<br>"way"
+						<br>"hack pool owner system"
+						<br>"outside group bribe pool owner offer wealth make mine"
+						<br>"entity threaten harass blackmail mining pool owner"
+						<br>"threat form legal action country physical violence mining pool owner family"
+						<br>"issue need closely monitor bitcoin stakeholder"
+						</i>
+						<br>
+						<br>
+
+						<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+						<p class="MsoNormal"><b>Passo 2: Método de classificação<o:p></o:p></b></p>
+
+						<p class="MsoNormal">A seguir, verificamos todas as datas em que temos mensagens
+						registradas em nosso banco de dados.<o:p></o:p></p>
+
+						<p class="MsoNormal">E classificamos se a data é uma data Positiva ou Negativa
+						para a nossa classificação.<o:p></o:p></p>
+
+						<p class="MsoNormal">A classificação será positiva para a data X se no dia
+						seguinte a data X o valor de cotação da Bitcoin era pelo menos 5% maior.<o:p></o:p></p>
+
+						<p class="MsoNormal">A classificação será negativa para a data X se no dia
+						seguinte a data X o valor de cotação da Bitcoin era pelo menos 5% maior.<o:p></o:p></p>
+
+						<p class="MsoNormal">Datas que não se encaixarem nos critérios acima serão
+						ignoradas na classificação.<o:p></o:p></p>
+
+						<p class="MsoNormal">Segue a classificação de janeiro de 2020.<o:p></o:p></p>
+
+						<p class="MsoNormal">&lt;Inserir tabelas com o seguinte: Data de janeiro;
+						Quantidade de mensagens; Cotação no dia; Cotação no dia seguinte;
+						Classificação&gt;<o:p></o:p></p>
+
+						<p class="MsoNormal">A classificação de uma mensagem será igual a classificação
+						da data da mensagem, pelo método apresentado acima.<o:p></o:p></p>
+
+						<p class="MsoNormal"><b>Passo 3: Treinamento do Classificador e avaliação de sua
+						precisão<o:p></o:p></b></p>
+
+						<p class="MsoNormal">Utilizamos a biblioteca skicit-learn para criar o nosso
+						classificador.<o:p></o:p></p>
+
+						<p class="MsoNormal">O conjunto de dados usado no treinamento do classificador
+						será chamado de dataset.<o:p></o:p></p>
+
+						<p class="MsoNormal">Dividimos de forma aleatória o nosso dataset em dois
+						datasets menores.<o:p></o:p></p>
+
+						<p class="MsoNormal">O primeiro dataset terá 90% dos dados. E será usado para
+						treinar o classificador.<o:p></o:p></p>
+
+						<p class="MsoNormal">O segundo dataset terá apenas 10% dos dados, e sua
+						classificação será omitida.<o:p></o:p></p>
+
+						<p class="MsoNormal">Usamos o nosso classificador para classificar o segundo
+						dataset.<o:p></o:p></p>
+
+						<p class="MsoNormal">Então, comparamos o resultado fornecido pelo classificador
+						com a classificação real do segundo dataset, que é conhecida.<o:p></o:p></p>
+
+						<p class="MsoNormal">Essa comparação nos fornece cinco métricas que estão
+						presentes na página principal</p>
+
+
+						<ul>
+							<li><span style="font-size: 0.8125rem; text-indent: -18pt;">Verdadeiros Positivos (VP)</span></li>
+							<li><span style="text-indent: -18pt; font-size: 0.8125rem;">Falsos positivos (FP)</span></li>
+							<li><span style="text-indent: -18pt; font-size: 0.8125rem;">Verdadeiros Negativos (VN)</span></li>
+							<li><span style="text-indent: -18pt; font-size: 0.8125rem;">Falsos Negativos (FN)</span></li>
+							<li><span style="text-indent: -18pt; font-size: 0.8125rem;">Precisão</span></li>
+						</ul>
+
+						<p class="MsoNormal"><br></p>
+
+						<p class="MsoNormal">Onde a Precisão é obtida pela seguinte equação:</p>
+
+						<p class="MsoNormal" style="text-align: center; "><img src="https://i.imgur.com/ZSdInjy.png" style="width: 151px;"></p>
+
+						<p class="MsoNormal" style="text-align: center; "><br></p>
+
+						<p class="MsoNormal">Atualmente, as métricas do nosso classificador são</p>
+						<ul><li>Verdadeiros Positivos: &lt;Inserir VP&gt;</li><li>Falsos Positivos: &lt;Inserir FP&gt;</li><li>Verdadeiros Negativos: &lt;Inserir VN&gt;</li><li>Falsos Negativos: &lt;Inserir FN&gt;</li><li>Precisão: &lt;Inserir Precisão&gt;</li></ul><p class="MsoNormal"><br></p>
+						<p class="MsoNormal"><b>Passo 4: Aplicação do classificador e obtenção do
+						resultado<o:p></o:p></b></p>
+						<p class="MsoNormal">Por fim, listamos e tratamos as mensagens do dia atual com o
+						mesmo processo definido no passo 1.<o:p></o:p></p>
+						<p class="MsoNormal">Segue abaixo uma amostra com 30 sentenças obtidas a partir
+						das mensagens do dia de hoje:<o:p></o:p></p>
+						<p class="MsoNormal">&lt;Listagem de mensagens do dia de hoje, depois de
+						tratar&gt;<o:p></o:p></p>
+						<p class="MsoNormal">Enfim, aplicamos essas mensagens ao nosso classificador, e
+						obtemos o seguinte resultado:<o:p></o:p></p>
+						<p class="MsoNormal">&lt;Inserir resultado&gt;<o:p></o:p></p>
+						<p class="MsoNormal">A análise consolidada, disponível no dahsboard, terá aumento
+						de 5% a análise por repetição de comentário e a análise semântica tiverem
+						resultado positivo.<o:p></o:p></p>
+						<p></p>
+						<p class="MsoNormal">Por analogia, A análise consolidada terá queda de 5% tanto a
+						análise por repetição de comentário e a análise semântica tiverem resultado negativo.<o:p></o:p></p>
+						<p><br></p>
+						<p class="MsoNormal"><br></p>
+						<p class="MsoNormal"><br></p>
+						<p class="MsoNormal"><o:p></o:p></p>
+						<p class="MsoNormal" style="text-align: center; "><br></p>
+						<p class="MsoNormal" style="text-align: center; "><br></p>
+						<p class="MsoNormal"><o:p></o:p></p>
 					</div>
 				</div>
 			</div>
