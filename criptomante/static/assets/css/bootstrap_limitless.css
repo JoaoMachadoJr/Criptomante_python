@@ -183,7 +183,7 @@ ul.list-circle {
 .list-inline-dotted .list-inline-item:not(:last-child) {
   margin-right: 0.625rem; }
   .list-inline-dotted .list-inline-item:not(:last-child):after {
-    content: "";
+    content: "";
     font-family: "icomoon";
     font-size: 0.5rem;
     width: 0.4rem;
@@ -2303,7 +2303,7 @@ select[size] {
     -moz-osx-font-smoothing: grayscale; }
 
 [data-action="collapse"]:after {
-  content: ""; }
+  content: ""; }
 
 [data-action="reload"]:after {
   content: ""; }

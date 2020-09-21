@@ -39,6 +39,7 @@ class ResultadosRepository(AbstractRepository):
                 order by GREATEST(cast(aumentos/cast(aumentos+quedas as numeric) as numeric),cast(quedas/cast(quedas+aumentos as numeric) as numeric)) desc"""
         return self.fetchAll(sql, {"prefixo":prefixo})
 
+
     def inserir_snapshots(self, snapshots: List[Snapshot]):
         self.begin()
         sql = "delete from graficos.snapshots"        

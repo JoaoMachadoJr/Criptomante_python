@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Criptomante - AnÃ¡lise semÃ¢ntica de comentÃ¡rios</title>
+	<title>Criptomante - Análise semântica de comentários</title>
 	<link rel="shortcut icon" href="{% static 'images/logo_aba.png' %}" >
 
 	<!-- Global stylesheets -->
@@ -40,7 +40,9 @@
 	
 
 	
-
+	<script type="text/javascript">
+		{% include "graficos.js" with componente="analise_semantica_resultado" grafico="progresso" progresso="1" icone=analise_semantica_resultado_icone raio="50" cor=analise_semantica_resultado_cor titulo=analise_semantica_resultado_titulo subtitulo=analise_semantica_resultado_subtitulo %} 
+	</script>
 </head>
 
 <body>
@@ -64,7 +66,7 @@
 			<div class="page-header page-header-light">
 				<div class="page-header-content header-elements-md-inline">
 					<div class="page-title d-flex">
-						<h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Metodologia</span> - AnÃ¡lise semÃ¢ntica de comentÃ¡rios</h4>
+						<h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Metodologia</span> - Análise semântica de comentários</h4>
 						<a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
 					</div>
 					
@@ -75,7 +77,7 @@
 			<div class="content">
 				<div class="card">
 					<div class="card-header header-elements-inline">
-						<h5 class="card-title">AnÃ¡lise semÃ¢ntica de comentÃ¡rios</h5>
+						<h5 class="card-title">Análise semântica de comentários</h5>
 					</div>
 					<div class="card-body">
 						<p class="MsoNormal"><b>Análise semântica de comentários<o:p></o:p></b></p>
@@ -228,18 +230,44 @@
 						<p class="MsoNormal" style="text-align: center; "><br></p>
 
 						<p class="MsoNormal">Atualmente, as métricas do nosso classificador são</p>
-						<ul><li>Verdadeiros Positivos: &lt;Inserir VP&gt;</li><li>Falsos Positivos: &lt;Inserir FP&gt;</li><li>Verdadeiros Negativos: &lt;Inserir VN&gt;</li><li>Falsos Negativos: &lt;Inserir FN&gt;</li><li>Precisão: &lt;Inserir Precisão&gt;</li></ul><p class="MsoNormal"><br></p>
+						<ul><li>Verdadeiros Positivos:<b> {{analise_semantica_v_positivo}}</b> </li>
+							<li>Falsos Positivos:<b> {{analise_semantica_f_positivo}}</b></li>
+							<li>Verdadeiros Negativos:<b> {{analise_semantica_v_negativo}}</b></li>
+							<li>Falsos Negativos:<b> {{analise_semantica_f_negativo}}</b></li>
+							<li>Precisão:<b> {{analise_semantica_precisao}}</b></li></ul>
+						<p class="MsoNormal"><br></p>
 						<p class="MsoNormal"><b>Passo 4: Aplicação do classificador e obtenção do
 						resultado<o:p></o:p></b></p>
 						<p class="MsoNormal">Por fim, listamos e tratamos as mensagens do dia atual com o
 						mesmo processo definido no passo 1.<o:p></o:p></p>
-						<p class="MsoNormal">Segue abaixo uma amostra com 30 sentenças obtidas a partir
-						das mensagens do dia de hoje:<o:p></o:p></p>
-						<p class="MsoNormal">&lt;Listagem de mensagens do dia de hoje, depois de
-						tratar&gt;<o:p></o:p></p>
+						<p class="MsoNormal">Segue abaixo uma amostra com 15 frases obtidas de mensagems publicadas nas últimas 24 horas.:<o:p></o:p></p>
+						<br>
+						<br>
+						<div class="row">
+							<div class="col-1">
+							</div>
+							<div class="col-10">
+								{% include "tabela.html" with categorias=header_frases_recentes dados=frases_recentes%}
+							</div>
+							<div class="col-1">
+							</div>
+						</div>
+						<br>
+						<br>
+
 						<p class="MsoNormal">Enfim, aplicamos essas mensagens ao nosso classificador, e
 						obtemos o seguinte resultado:<o:p></o:p></p>
-						<p class="MsoNormal">&lt;Inserir resultado&gt;<o:p></o:p></p>
+
+						<div class="card text-center">
+							<div class="card-body">
+								<br>
+								<!-- Progress counter -->
+								<div class="svg-center position-relative" id="analise_semantica_resultado"></div>
+								<!-- /progress counter -->
+
+							</div>
+						</div>
+
 						<p class="MsoNormal">A análise consolidada, disponível no dahsboard, terá aumento
 						de 5% a análise por repetição de comentário e a análise semântica tiverem
 						resultado positivo.<o:p></o:p></p>

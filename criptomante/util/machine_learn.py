@@ -31,8 +31,62 @@ def clean_text(text):
     return text.strip().lower()
 
 
+def construir_modelo(dataframe):
+    classificador = LogisticRegression(max_iter=999999999, n_jobs=6,solver='saga')
 
-def contruir_modelo(dataframe):
+
+    
+    vetorizador = TfidfVectorizer(tokenizer = tokenizer, ngram_range=(1,1))
+
+    classifier = classificador
+    tfidf_vector = vetorizador
+
+
+    X = dataframe['texto'] # the features we want to analyze
+    ylabels = dataframe['tendencia'] # the labels, or answers, we want to test against
+    X_train, X_test, y_train, y_test = train_test_split(X, ylabels, test_size=0.1)
+
+
+    print("Criando Pipe")
+    # Create pipeline using Bag of Words
+    pipe = Pipeline([('vectorizer', tfidf_vector),
+                    ('classifier', classifier)],
+                    verbose=True)
+
+    print("Realizando FIT")
+    # model generation
+    pipe.fit(X_train,y_train)
+
+    print("Realizando previsao")
+    # Predicting with a test dataset
+    predicted = pipe.predict(X_test)
+
+            
+
+    # Model Accuracy
+    print("Precisao =",metrics.precision_score(y_test, predicted))
+
+    saida = dict()
+    saida["modelo"] = pipe
+    saida["Accuracy"]= metrics.accuracy_score(y_test, predicted)
+    saida["Precision"] = metrics.precision_score(y_test, predicted)
+    saida["Recall"] = metrics.recall_score(y_test, predicted)
+    saida["X_train"] = X_train
+    saida["X_test"] = X_test
+    saida["y_train"] = y_train
+    saida["y_test"] = y_test
+    matriz = confusion_matrix(y_test,predicted )
+    saida["TP"] = matriz[1][1]
+    saida["FP"] = matriz[0][1]
+    saida["TN"] = matriz[0][0]
+    saida["FN"] = matriz[1][0]
+
+
+    return saida
+
+
+
+def comparar_modelos(dataframe):
     classificadores = dict()
     classificadores["LogisticRegression"] = LogisticRegression(max_iter=999999999, n_jobs=6)
     classificadores["LogisticRegression, newton-cg"] = LogisticRegression(max_iter=999999999, solver='newton-cg')

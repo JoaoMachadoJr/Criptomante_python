@@ -17,6 +17,7 @@
 	<link href="{% static 'assets/css/layout.min.css' %}" rel="stylesheet" type="text/css">
 	<link href="{% static 'assets/css/components.min.css' %}" rel="stylesheet" type="text/css">
 	<link href="{% static 'assets/css/colors.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap_original_table.css' %}" rel="stylesheet" type="text/css">
 	<!-- /global stylesheets -->
 
 	<!-- Core JS files -->
@@ -78,23 +79,101 @@
 						<h5 class="card-title">Análise por repetição de comentários</h5>
 					</div>
 					<div class="card-body">
-						<p>A Fazer: Desenvolver os seguintes argumentos/informações</p>
-						<ul><li>Começar resumindo a análise, do inicio ao fim, de forma superficial.</li>
-							<li>A idéia geral da análise é essa: Observe a comunidade com maior volume de conversação sobre bitcoin, que é o Reddit. Então verifique o que está sendo dito hoje, compare com outras vezes em que a mesma coisa foi dita. Verifique se, das outras vezes, esses comentários precederam aumento ou queda no valor do bitcoin</li>
-							<li>Começar então a desenvolver de forma detalhada, desde o inicio</li>
-							<li>1- Listamos as mensagens trocadas nas últimas 24h</li>
-							<li>2- Para cada mensagem de usuário, separamos em Frases. A separação é feita usando um motor de processamento de linguagem natural para o idioma inglês. Aqui falamos sobre esse motor, um dos mais avançados do mundo, chamado spaCy</li>
-							<li>3- Realizamos um pré-tratamento, removendo caracteres especiais e links</li>
-							<li>4- Para cada frase, verificamos toda as vezes em que essa frase foi dita. Se a quantidade de vezes que essa frase precedeu um aumento é diferente da quantidade de vezes em que essa frase precedeu uma queda, então consideramos que é uma Frase que possui Tendencia. Obs: Aumentos e Quedas devem ser de pelo menos 5% em 24h para serem condirados</li>
-							<li>5- Calculamos a média de variação do preço de bitcoin de todas as frases com tendencia encontradas no passo 4.</li>
-							<li>6- Calculamos a média das médias encontradas no passo 5. Sendo esse valor nosso resultado da análise, e será então aplicado ao valor duturo do bitcoin na Análise Consolidada, no Dashboard</li>
-							<li>Listar mensagens  ditas nas ultimas 24h. Passo 1</li>
-							<li>Exibir frases obtidas pelo Spacy. Passo  e 3</li>
-							<li>Exibir outras vezes em que essas frases foram ditas. Informamos se é uma frase com tendencia. Passo 4</li>
-							<li>Exibir calculo de media do passo 5.</li>
-							<li>Exibir calculo de media do passo 6.</li>
 					
-						</ul>
+						<p class="MsoNormal">A análise por repetição de comentários, como todas as análises
+						desenvolvidas nesse projeto, se baseia no <b>princípio de ondas de Elliot, </b>que
+						afirma que os fenômenos sociais e a especulação financeira são cíclicos.<o:p></o:p></p>
+
+						<p class="MsoNormal">Nessa análise identificamos a semelhança entre o que é
+						publicado em uma rede social sobre a Bitcoin atualmente, e o que já foi
+						publicado no passado. A partir dessa semelhança, e do valor histórico da
+						Bitcoin, obtemos uma estimativa de sua tendência futura.<o:p></o:p></p>
+
+						<p class="MsoNormal">Nesse projeto analisamos publicações na rede social <b>Reddit</b>,
+						na sessão específica de debates sobre a Bitcoin.<o:p></o:p></p>
+
+						<p class="MsoNormal">A análise detalhada é composta pelos seguintes passos:<o:p></o:p></p>
+
+						<p class="MsoNormal"><b>&nbsp;</b></p>
+
+						<p class="MsoNormal"><b>Passo 1: Listamos as mensagens publicadas nas últimas 24
+						horas.<o:p></o:p></b></p>
+
+						<p class="MsoNormal">Na tabela a seguir estão algumas das mensagens trocadas nas últimas
+						24 horas.<o:p></o:p></p>
+
+						<div class="row">
+							<div class="col-1">
+							</div>
+							<div class="col-10">
+								{% include "tabela.html" with categorias=mensagens_recentes_header dados=mensagens_recentes%}
+							</div>
+							<div class="col-1">
+							</div>
+						</div>
+						<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+						<p class="MsoNormal"><b>Passo 2: Separação em frases menores.<o:p></o:p></b></p>
+
+						<p class="MsoNormal">Utilizamos o motor de processamento de linguagem natural
+						Spacy para separar mensagens longas em sentenças menores.<o:p></o:p></p>
+
+						<p class="MsoNormal">Tome por exemplo, a mensagem a seguir:<o:p></o:p></p>
+
+						<p class="MsoNormal">  <i>  {{ mensagem_mais_frases }}  </i>  <o:p></o:p></p>
+
+						<p class="MsoNormal">Essa mensagem será dividida nas seguintes sentenças:<o:p></o:p></p>
+
+						<ul> {{  frases|safe  }} </ul>
+
+						<p class="MsoNormal"><b>Passo 3: Realizamos um tratamento nas frases, removendo
+						caracteres especiais, links e etc.<o:p></o:p></b></p>
+
+						<ul> {{  frases_pos_tratamento|safe  }} </ul>
+
+						<p class="MsoNormal"><b>Passo 4: Analisamos ocorrências anteriores de cada frase
+						e obtemos nosso resultado.<o:p></o:p></b></p>
+
+						<p class="MsoNormal">Para cada frase, analisamos suas ocorrências anteriores. <o:p></o:p></p>
+
+						<p class="MsoNormal">Analisamos também o valor da Bitcoin no dia seguinte a data
+						de postagem de cada ocorrência anterior da frase. <o:p></o:p></p>
+
+						<p class="MsoNormal">Para cada ocorrência em que o valor da Bitcoin no dia
+						seguinte foi de pelo menos 5% maior do que no dia de postagem da frase,
+						contamos como uma ocorrência Positiva.<o:p></o:p></p>
+
+						<p class="MsoNormal">Para cada ocorrência em que o valor da Bitcoin no dia
+						seguinte foi de pelo menos 5% menor do que no dia de postagem da frase,
+						contamos como uma ocorrência Negativa.<o:p></o:p></p>
+
+						<p class="MsoNormal">Ocorrências em que o valor da Bitcoin no dia seguinte teve
+						uma variação menor do que 5% são ignoradas.<o:p></o:p></p>
+
+						<div class="row">
+							<div class="col-1">
+							</div>
+							<div class="col-10">
+								{% include "tabela.html" with categorias=header_comentarios_recentes dados=comentarios_recentes%}
+							</div>
+							<div class="col-1">
+							</div>
+						</div>
+
+						<p class="MsoNormal">Por fim, o resultado da análise será baseado se a maioria
+						das frases que demonstraram tendência tiveram tendência positiva ou negativa.<o:p></o:p></p>
+
+						<p class="MsoNormal">Nessa análise específica, a tendência foi: &lt;Inserir
+						resultado da análise por repetição de comentários&gt;<o:p></o:p></p>
+
+						<p class="MsoNormal">A análise consolidada, disponível no dahsboard, terá aumento
+						de 5% a análise por repetição de comentário e a análise semântica tiverem
+						resultado positivo.<o:p></o:p></p>
+
+						<p class="MsoNormal">Por analogia, A análise consolidada terá queda de 5% se
+						ambas as análise por repetição de comentário e a análise semântica tiverem
+						resultado negativo.<o:p></o:p></p>
+							<h2></h2>
 					</div>
 				</div>
 			</div>

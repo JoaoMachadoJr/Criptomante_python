@@ -322,13 +322,15 @@ class AnalyzerTextual:
     
     def realizar_analise_semantica(self):
         #Verifica se ja existe um arquivo de modelo recente
-
+        print("realizar_analise_semantica")
         dados = ResultadosRepository().recuperar_analise_semantica()
         
         if (dados!=None) and (datetime.now() + timedelta(days=7) > dados["datahora"] and (os.path.isfile('modelo.joblib'))):
+            print("Recuperando modelo")
             modelo = load('modelo.joblib')
         else:
-            dados:dict = machine_learn.contruir_modelo(self.carregar_dataset())
+            print("Criando novo modelo")
+            dados:dict = machine_learn.construir_modelo(self.carregar_dataset())
             dump(dados["modelo"], 'modelo.joblib')
             ResultadosRepository().gravar_analise_semantica(dados)
             modelo=dados["modelo"]

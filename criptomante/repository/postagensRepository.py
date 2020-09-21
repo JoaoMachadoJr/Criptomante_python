@@ -217,6 +217,16 @@ class PostagensRepository(AbstractRepository):
         sql = "select distinct texto_tratado from frases_recentes f join frases_ocorrencias fo on md5(fo.texto) = md5(f.texto)"
         result = self.fetchAll(sql)
         return [r["texto_tratado"] for r in result]
+
+    def listar_frases_recentes_antes_e_depois_de_tratamento(self):
+        sql = """select distinct texto_tratado, f.texto
+                    from frases_recentes f 
+                    join frases_ocorrencias fo on md5(fo.texto) = md5(f.texto)  
+                    where texto_tratado<>'' and lower(fo.texto_tratado)<>lower(f.texto) and length(texto_tratado)>5
+                    order by f.texto
+                    """
+        result = self.fetchAll(sql)
+        return result
     
     def listar_frases_com_tendencia(self):
         sql = """select texto from frases_ocorrencias fo
@@ -271,6 +281,10 @@ class PostagensRepository(AbstractRepository):
         parametros["tipo_associacao"] = tipo_associacao
         self.execute(sql, parametros)
         self.commit()
+    
+    def listar_mensagens_recentes_ordenadas_pelo_horario(self):
+        sql = "select * from mensagens where indexada order by data desc limit 15"
+        return self.fetchAll(sql,dict())
     
     def remove_frases_vazias(self):
         print("Removendo frases vazias")
