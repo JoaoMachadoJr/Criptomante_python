@@ -34,6 +34,7 @@ class AnalizerNumerico:
         repositorio.gravarAnaliseNumerica(resultado_por_mediana, "mediana")
 
     def calcular_snapshots(self, cotacoes:List[Cotacao]):
+
         print("calcular_snapshots")
         cotacoes_dicionario :Dict[datetime, Cotacao] = dict()
         for c in cotacoes:

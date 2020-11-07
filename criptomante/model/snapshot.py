@@ -14,6 +14,7 @@ class Momento:
         if data_atual != None:
             self.data = data_atual + intervalo_da_data_atual
             self.data_referencia = self.data + intervalo_da_data_referencia
+    
 
     @staticmethod
     def encode(data, data_referencia):
@@ -27,6 +28,7 @@ class Snapshot:
     momentos:Dict[str, Momento]
     data:datetime
     pontuacao:float
+    ccotacao=0
         
     def __init__(self, cotacao = None):
         self.momentos=dict()
@@ -36,11 +38,11 @@ class Snapshot:
 
     @property
     def cotacao(self):
-        return self._cotacao
+        return self.ccotacao
     
     @cotacao.setter
     def cotacao(self, value):
-        self._cotacao = value
+        self.ccotacao = value
         self.data = self.cotacao.data
         self.momentos["DR-6M"]=Momento(value.data, relativedelta(months=-6), relativedelta(months=-6))
         self.momentos["DR-5M"]=Momento(value.data, relativedelta(months=-5), relativedelta(months=-1))

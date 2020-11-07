@@ -20,7 +20,7 @@ import time
 import subprocess
 import os 
 import mmap
-
+import pytz
 class CrawlerPlataformas:
     LIMITE_PARA_USO_DA_ROTINA_PARA_COTACOES_RECENTES = timedelta(days=4)
         
@@ -41,23 +41,23 @@ class CrawlerPlataformas:
         print("Arquivo de {} linhas".format(linhas))
         i=0
         with open(CAMINHO_ARQUIVO, newline='') as csvfile:
-            reader = DictReader(csvfile, ["timestamp", "valor"])
+            reader = DictReader(csvfile, ["timestamp", "valor", "volume"])
             for row in reader:
                 cotacao = Cotacao()
-                cotacao.data = datetime.fromtimestamp(int(row["timestamp"]))
-                cotacao.data = cotacao.data.replace(tzinfo=None)
+                cotacao.data = datetime.fromtimestamp(int(row["timestamp"]),pytz.timezone('America/Sao_Paulo'))
+                cotacao.data = datetime(cotacao.data.year, cotacao.data.month, cotacao.data.day, cotacao.data.hour, cotacao.data.minute, cotacao.data.second)
                 cotacao.valor = float(row["valor"])
-                cotacao.transacoes=1                
-                if self.plataforma.ultimo<cotacao.data:
-                    cotacoes.add(cotacao)
+                cotacao.volume = float(row["volume"])
+                cotacao.transacoes=1 
+                cotacoes.add(cotacao)               
+                if self.plataforma.ultimo<cotacao.data:                    
                     self.plataforma.ultimo = cotacao.data
                 if len(cotacoes)==100000:
                     self.gravar(cotacoes)
                     cotacoes.clear()
                     print("Cotacoes salvas: {}/{}".format(i,linhas))
                 i=i+1
-                
-        
+                        
         #Gravar
         self.gravar(cotacoes)
 
@@ -86,25 +86,27 @@ class CrawlerPlataformas:
         csv = Browser.lerHtml(URL)
 
         #Ler CSV
-        reader = DictReader(csv.splitlines(), ["timestamp", "valor"])
+        reader = DictReader(csv.splitlines(), ["timestamp", "valor", "volume"])
         cotacoes = set()
         i=0
         for row in reader:
             cotacao = Cotacao()
-            cotacao.data = datetime.fromtimestamp(int(row["timestamp"]))
-            cotacao.data = cotacao.data.replace(tzinfo=None)
+            cotacao.data = datetime.fromtimestamp(int(row["timestamp"]),pytz.timezone('America/Sao_Paulo'))
+            cotacao.data = datetime(cotacao.data.year, cotacao.data.month, cotacao.data.day, cotacao.data.hour, cotacao.data.minute, cotacao.data.second)
             cotacao.valor = float(row["valor"])
-            cotacao.transacoes=1                
-            if self.plataforma.ultimo<cotacao.data:
-                cotacoes.add(cotacao)
+            cotacao.volume = float(row["volume"])
+            if cotacao.volume==0:
+                continue
+            cotacao.transacoes=1 
+            cotacoes.add(cotacao)               
+            if self.plataforma.ultimo<cotacao.data:                    
                 self.plataforma.ultimo = cotacao.data
             if len(cotacoes)==100000:
                 self.gravar(cotacoes)
                 cotacoes.clear()
-                print("Cotacoes salvas: {}".format(i))
+                print("Cotacoes salvas: {}/{}".format(i,linhas))
             i=i+1
-                
-        
+                        
         #Gravar
         self.gravar(cotacoes)
 

@@ -264,7 +264,7 @@ class AnalyzerTextual:
                     from frases f
                     join mensagens m on m.mensagem=f.mensagem
                     join frases_ocorrencias fo on md5(f.texto) = md5(fo.texto)  and texto_tratado is not null and texto_tratado <> ''
-                    join variacoes v on v.data = date_trunc('hour', m.data) and (variacao<0.95 or variacao>1.05)
+                    join variacoes v on v.data = date_trunc('hour', m.data)  and (variacao<0.95 or variacao>1.05)
                     group by  v.data, v.variacao
                     having string_agg(texto_tratado, '\n') <> ''
                     order by v.data  """

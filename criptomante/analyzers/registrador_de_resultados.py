@@ -17,7 +17,7 @@ class RegistradorDeResultados:
         cotacoes = ResultadosRepository().cotacoes_medias_diarias(hoje - relativedelta.relativedelta(months=12), hoje)
         previsoes = ResultadosRepository().listar_previsoes_numericas(hoje, 'mediana')
         registrar = cotacoes
-        _data_anterior=None
+        _data_anterior:dict=None
         for _data in previsoes:
             if (_data_anterior != None) and (_data["data"]<hoje+timedelta(days=100)):
                 diferenca = (_data["data"] - _data_anterior["data"]).days
@@ -27,6 +27,7 @@ class RegistradorDeResultados:
                     novo["valor"] = _data_anterior["valor"] + (i*variacao)
                     novo["data"] = _data_anterior["data"] + timedelta(days=i)
                     novo["transacoes"] = 0
+                    novo["volume"] = 0
                     registrar.append(novo)
             _data_anterior = _data
         

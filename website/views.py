@@ -4,6 +4,7 @@ from criptomante.repository.resultados_repository import ResultadosRepository
 from criptomante.repository.postagensRepository import PostagensRepository
 from datetime import datetime, date
 from criptomante.model.snapshot import Snapshot
+from criptomante.util.json_util import JsonUtil
 
 # Create your views here.
 def dashboard(request):

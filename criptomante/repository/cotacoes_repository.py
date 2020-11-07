@@ -17,15 +17,17 @@ class CotacoesRepository(AbstractRepository):
         return saida
     
     def inserirCotacoes(self, cotacoes: List[Cotacao]):
-        sql = """insert into cotacoes (data, valor, transacoes) values (:data, :valor, :transacoes)
+        sql = """insert into cotacoes (data, valor, transacoes, volume) values (:data, :valor, :transacoes, :volume)
                  ON CONFLICT (data) 
-                 DO UPDATE SET valor = ((cotacoes.valor*cotacoes.transacoes)+(EXCLUDED.valor*EXCLUDED.transacoes))/(cotacoes.transacoes+EXCLUDED.transacoes), 
+                 DO UPDATE SET valor = ((cotacoes.valor*cotacoes.volume)+(EXCLUDED.valor*EXCLUDED.volume))/(cotacoes.volume+EXCLUDED.volume), 
+                 volume = cotacoes.volume+EXCLUDED.volume,
                  transacoes = cotacoes.transacoes+EXCLUDED.transacoes"""
         params = list()
         for c in cotacoes:
             p = dict()
             p["valor"] = c.valor
             p["transacoes"] = c.transacoes
+            p["volume"] = c.volume
             p["data"] = c.data
             params.append(p)
         self.executeMany(sql, params)
@@ -39,13 +41,14 @@ class CotacoesRepository(AbstractRepository):
 
 
     def listarCotacoes(self):
-        sql = "select data, valor, transacoes from cotacoes where data > '01/01/2014' order by data"
+        sql = "select data, valor, transacoes, volume from cotacoes where data > '01/01/2014' order by data"
         result = self.fetchAll(sql, dict())
         saida = list()
         for r in result:
             c = Cotacao()
             c.data = r["data"]
             c.transacoes = r["transacoes"]
+            c.volume = r["volume"]
             c.valor = r["valor"]
             saida.append(c)
         return saida

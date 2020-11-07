@@ -4,3 +4,5 @@ criptomante/repository/__pycache__/*
 modelo.joblib
 bitstampUSD.csv
 bitstampUSD.csv.gz
+*.csv
+*.tmp
