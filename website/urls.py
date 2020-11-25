@@ -8,5 +8,5 @@ urlpatterns = [
     path('apresentacao', views.apresentacao, name='Apresentação'),
     path('padroes_numericos', views.padroes_numericos, name='Análise por padrões numéricos'),
     path('repeticao_comentarios', views.repeticao_comentarios, name='Análise por repetição de comentários'),
-    path('analise_semantica', views.analise_semantica, name='Análise por análise semântica de comentários'),
+    path('analise_sentimentos', views.analise_sentimentos, name='Análise de Sentimentos'),
 ]

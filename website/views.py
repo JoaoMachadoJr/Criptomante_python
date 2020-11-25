@@ -162,7 +162,7 @@ def repeticao_comentarios(request):
 
     return render(request, 'repeticao_comentarios.html', params)
 
-def analise_semantica(request):
+def analise_sentimentos(request):
     params = dict()
     analise_semantica = ResultadosRepository().recuperar_analise_semantica()
     total_positivos = analise_semantica["fp"]+analise_semantica["tp"]
