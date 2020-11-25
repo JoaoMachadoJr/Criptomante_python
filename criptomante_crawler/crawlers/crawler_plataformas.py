@@ -25,6 +25,7 @@ class CrawlerPlataformas:
     LIMITE_PARA_USO_DA_ROTINA_PARA_COTACOES_RECENTES = timedelta(days=4)
         
     def consultar_dados_antigos(self):
+        print("Consulta de dados antigos")
         URL_API = "http://api.bitcoincharts.com/v1/csv/{}.csv.gz".format(self.plataforma.nome)
         CAMINHO_ARQUIVO = "{}.csv".format(self.plataforma.nome)
         CAMINHO_ARQUIVO_COMPACTADO = CAMINHO_ARQUIVO+".gz"        
@@ -80,6 +81,7 @@ class CrawlerPlataformas:
                 
     
     def consultar_dados_recentes(self):
+        print("Consulta de dados recentes")
         URL = "http://api.bitcoincharts.com/v1/trades.csv?symbol={}&start={}"
         URL = URL.format(self.plataforma.nome, int(self.plataforma.ultimo.timestamp()))
 
@@ -116,7 +118,9 @@ class CrawlerPlataformas:
         plataformas = repository.listar_plataformas()        
         
         lista_threads = list() #Usado apenas para execução paralela
+        print("Consultando plataforma")
         for p in plataformas:
+            print("Contultando plataforma "+p.nome)
             if (p.ultimo + self.LIMITE_PARA_USO_DA_ROTINA_PARA_COTACOES_RECENTES)<datetime.now():
                 if paralelo:
                     crawler = CrawlerPlataformas()

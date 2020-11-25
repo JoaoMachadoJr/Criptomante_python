@@ -43,9 +43,13 @@ class AbstractCrawler(ABC):
                     
             except Exception as e:
                 print(str(e))
-            
+        sleep(10)
+        print("Proxima url nula, sinalizando para parar execucao")    
         if iniciar_leitor_postagens:
+            print("crawler recebeu pedido para parar")
             GerenciadorThreads.finalizar_gerenciamento(ThreadPostagens, continuar_esperando_novas_threads=True)
+            print("crawler parou")
+
 
     def processar_menu(self, url_menu: str)->List[Postagem]:
         html = Browser.lerHtml(url_menu)

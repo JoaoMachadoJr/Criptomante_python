@@ -45,7 +45,7 @@ class GerenciadorThreads(MinhaThread):
 
         segundos =0
         while (True):
-            segundos+=1
+            segundos+=5
             self.resolverTimeout(self.classe_threads)
             threads_ativas, threads_totais, threads_finalizadas, threads_em_fila = self.threadsAtivas(self.classe_threads.__name__)
 
@@ -61,7 +61,7 @@ class GerenciadorThreads(MinhaThread):
                     t.start()
             if (threads_ativas==0)  and (threads_em_fila==0):
                 return
-            sleep(1)
+            sleep(5)
                     
                     
             
@@ -82,7 +82,7 @@ class GerenciadorThreads(MinhaThread):
     def finalizar_gerenciamento(cls, classe_threads, continuar_esperando_novas_threads = False):
         classe_threads.esperando_novos = continuar_esperando_novas_threads
         ativas, totais, finalizadas, em_fila  = cls.threadsAtivas(classe_threads.__name__)
-        while not (ativas==0):
+        while (ativas!=0) or (classe_threads.esperando_novos):
             sleep(5)
             ativas, totais, finalizadas, em_fila = cls.threadsAtivas(classe_threads.__name__)
         print("Threads finalizadas: {}".format(classe_threads.__name__))
