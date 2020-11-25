@@ -1,5 +1,5 @@
 :inicio
-	taskkill /IM python.exe
+	taskkill /F /IM python.exe
 	cd C:\@work\pessoal\Criptomante_python
 	python job.py
 	timeout /t 300

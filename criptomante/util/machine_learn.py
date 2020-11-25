@@ -55,10 +55,8 @@ def construir_modelo(dataframe):
     #Realizando a previsão.
     pipe.fit(X_train,y_train)
     predicted = pipe.predict(X_test)
-        
-    # Model Accuracy
-    print("Precisao =",metrics.precision_score(y_test, predicted))
 
+    #Preparando saida    
     saida = dict()
     matriz = confusion_matrix(y_test,predicted )
     saida["TP"] = matriz[1][1] #Verdadeiros Positivos
